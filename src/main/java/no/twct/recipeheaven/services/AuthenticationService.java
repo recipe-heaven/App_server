@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,7 +18,6 @@ import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.security.enterprise.identitystore.PasswordHash;
 import javax.security.enterprise.identitystore.CredentialValidationResult.Status;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -90,11 +88,12 @@ public class AuthenticationService {
 					.validate(new UsernamePasswordCredential(email, password));
 			if (result.getStatus() == Status.VALID) {
 				String token = generateToken(email, result.getCallerGroups(), request);
-				response = Response.ok(new DataResponse("Successfully logged in").getResponse())
+				User u = this.getCurrentUser(email);
+				System.out.println(u.getEmail());
+				response = Response.ok(new DataResponse(u).getResponse())
 						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 			} else {
-				response = Response.ok(new ErrorResponse(new ErrorMessage("Wrong username / password")).getResponse())
-						.status(400);
+				response = Response.ok(new ErrorResponse(new ErrorMessage("Wrong username / password")).getResponse());
 			}
 		} catch (Exception e) {
 			response = Response.ok(new ErrorResponse(new ErrorMessage("Unexpected login error")).getResponse())
@@ -130,24 +129,24 @@ public class AuthenticationService {
 	/**
 	 * Creates a new userin the system.
 	 * 
-	 * @param firstname the first name of the user
-	 * @param lastname  the last name of the user
+	 * @param name the first name of the user
+	 * @param username  the last name of the user
 	 * @param password  desired password for the user
 	 * @param email     email for the user
 	 * @return returns ok, or error if invalid creation
 	 */
 	@POST
 	@Path("create")
-	public Response createUser(@HeaderParam("firstname") String firstname, @HeaderParam("lastname") String lastname,
+	public Response createUser(@HeaderParam("name") String name, @HeaderParam("username") String username,
 			@HeaderParam("password") String password, @HeaderParam("email") String email) {
 		ResponseBuilder resp;
 		try {
 			User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email)
 					.getSingleResult();
 			resp = Response.ok(
-					new ErrorResponse(new ErrorMessage("User already exist, please try another email")).getResponse());
+					new ErrorResponse(new ErrorMessage("User already exist, please try another email")).getResponse()).status(400);;
 		} catch (NoResultException e) {
-			User newUser = new User(email, firstname, lastname, password);
+			User newUser = new User(email, name, username, password);
 			Group usergroup = em.find(Group.class, Group.USER_GROUP_NAME);
 			newUser.setPassword(hasher.generate(password.toCharArray()));
 			newUser.getGroups().add(usergroup);

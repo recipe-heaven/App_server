@@ -37,21 +37,21 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 
-	@Column(nullable = false)
 	@NotBlank
-	private String firstName;
-
 	@Column(nullable = false)
+	private String name;
+
 	@NotBlank
-	private String lastName;
-
 	@Column(nullable = false)
+	private String username;
+
 	@Email
+	@Column(nullable = false)
 	private String email;
 
-	@Column(nullable = false)
-	@JsonbTransient
 	@Size(min = 6)
+	@JsonbTransient
+	@Column(nullable = false)
 	private String password;
 
 	@ManyToMany
@@ -62,10 +62,10 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public User(String email, String firstName, String lastName, String password) {
+	public User(String email, String name, String username, String password) {
 		this.setEmail(email);
-		this.setFirstName(firstName);
-		this.setLastName(lastName);
+		this.setName(name);
+		this.setUsername(username);
 		this.setPassword(password);
 	}
 
@@ -73,12 +73,12 @@ public class User implements Serializable {
 		return this.id;
 	}
 
-	public String getFirstName() {
-		return this.firstName;
+	public String getName() {
+		return this.name;
 	}
 
-	public String getLastName() {
-		return this.lastName;
+	public String getUsername() {
+		return this.username;
 	}
 
 	public String getEmail() {
@@ -96,16 +96,16 @@ public class User implements Serializable {
 		return groups;
 	}
 
-	public void setFirstName(String firstName) {
-		if (firstName == null || firstName.isEmpty())
-			throw new InvalidParameterException("First name is empty or null");
-		this.firstName = firstName;
+	public void setName(String name) {
+		if (name == null || name.isEmpty())
+			throw new InvalidParameterException("Name is empty or null");
+		this.name = name;
 	}
 
-	public void setLastName(String lastName) {
-		if (lastName == null || lastName.isEmpty())
-			throw new InvalidParameterException("Last name is empty or null");
-		this.lastName = lastName;
+	public void setUsername(String username) {
+		if (username == null || username.isEmpty())
+			throw new InvalidParameterException("Username is empty or null");
+		this.username = username;
 	}
 
 	public void setEmail(String email) {

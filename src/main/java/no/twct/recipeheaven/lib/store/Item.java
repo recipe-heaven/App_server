@@ -2,8 +2,6 @@ package no.twct.recipeheaven.lib.store;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 

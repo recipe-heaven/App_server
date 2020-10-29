@@ -16,8 +16,6 @@ import java.util.UUID;
 import javax.activation.DataHandler;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.enterprise.context.ApplicationScoped;
 
 import javax.inject.Inject;
 
@@ -48,14 +46,10 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.TransactionScoped;
-import javax.transaction.Transactional;
 import javax.ws.rs.core.MediaType;
-import javax.ejb.TransactionManagementType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import no.twct.recipeheaven.lib.communication.JavaxMail;
-import no.twct.recipeheaven.lib.communication.Mail;
 import no.twct.recipeheaven.lib.resource.Image;
 import no.twct.recipeheaven.lib.response.DataResponse;
 import no.twct.recipeheaven.lib.response.ErrorResponse;
@@ -63,8 +57,6 @@ import no.twct.recipeheaven.lib.response.errors.ErrorMessage;
 import no.twct.recipeheaven.lib.store.Item;
 import no.twct.recipeheaven.lib.users.Group;
 import no.twct.recipeheaven.lib.users.User;
-
-import java.util.Properties;
 
 @Path("shop")
 @Stateless

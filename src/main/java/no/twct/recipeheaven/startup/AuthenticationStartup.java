@@ -3,7 +3,6 @@ package no.twct.recipeheaven.startup;
 import no.twct.recipeheaven.lib.users.Group;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.DependsOn;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;

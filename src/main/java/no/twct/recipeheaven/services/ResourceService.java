@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,7 +29,6 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 
-import javax.transaction.Transactional;
 import javax.ws.rs.core.MediaType;
 
 import no.twct.recipeheaven.lib.resource.Image;
