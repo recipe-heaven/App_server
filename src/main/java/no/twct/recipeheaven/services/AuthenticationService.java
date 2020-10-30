@@ -90,8 +90,8 @@ public class AuthenticationService {
 				String token = generateToken(email, result.getCallerGroups(), request);
 				User u = this.getCurrentUser(email);
 				System.out.println(u.getEmail());
-				response = Response.ok(new DataResponse(u).getResponse())
-						.header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+				response = Response.ok(new DataResponse(u).getResponse()).header(HttpHeaders.AUTHORIZATION,
+						"Bearer " + token);
 			} else {
 				response = Response.ok(new ErrorResponse(new ErrorMessage("Wrong username / password")).getResponse());
 			}
@@ -129,10 +129,10 @@ public class AuthenticationService {
 	/**
 	 * Creates a new userin the system.
 	 * 
-	 * @param name the first name of the user
-	 * @param username  the last name of the user
-	 * @param password  desired password for the user
-	 * @param email     email for the user
+	 * @param name     the first name of the user
+	 * @param username the last name of the user
+	 * @param password desired password for the user
+	 * @param email    email for the user
 	 * @return returns ok, or error if invalid creation
 	 */
 	@POST
@@ -144,7 +144,7 @@ public class AuthenticationService {
 			User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email)
 					.getSingleResult();
 			resp = Response.ok(
-					new ErrorResponse(new ErrorMessage("User already exist, please try another email")).getResponse()).status(400);;
+					new ErrorResponse(new ErrorMessage("User already exist, please try another email")).getResponse());
 		} catch (NoResultException e) {
 			User newUser = new User(email, name, username, password);
 			Group usergroup = em.find(Group.class, Group.USER_GROUP_NAME);
