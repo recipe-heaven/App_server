@@ -32,4 +32,5 @@ services:
       - 9080:9080
 networks:
   backend:
+    name: recipe_heaven_backend
     driver: bridge
