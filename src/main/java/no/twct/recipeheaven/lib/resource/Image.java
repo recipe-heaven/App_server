@@ -12,18 +12,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.store.Item;
 
 /**
  * Represents a storeable image.
  */
+@Data
 @Entity
+@NoArgsConstructor
 @Table(name = "images")
 public class Image implements Serializable {
-
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -40,45 +40,5 @@ public class Image implements Serializable {
 	@JoinColumn(name = "owner", referencedColumnName = "id", nullable = true)
 	@ManyToOne
 	private Item owner;
-
-	public Image() {
-
-	}
-
-	public BigInteger getId() {
-		return this.id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getMimeType() {
-		return this.mimeType;
-	}
-
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-
-	public float getSize() {
-		return this.size;
-	}
-
-	public void setSize(float size) {
-		this.size = size;
-	}
-
-	public Item getOwner() {
-		return this.owner;
-	}
-
-	public void setOwner(Item owner) {
-		this.owner = owner;
-	}
 
 }

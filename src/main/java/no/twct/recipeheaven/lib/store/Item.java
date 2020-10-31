@@ -20,6 +20,8 @@ import javax.persistence.Temporal;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.adapters.ImageObjectAdapter;
 import no.twct.recipeheaven.lib.resource.Image;
 import no.twct.recipeheaven.lib.users.User;
@@ -31,7 +33,7 @@ import no.twct.recipeheaven.lib.users.User;
 @NamedQuery(name = Item.DELETE_BY_ID, query = "DELETE FROM Item i WHERE i.id = :id AND i.seller = :seller")
 @NamedQuery(name = Item.GET_ALL_DESC, query = "SELECT i FROM Item i ORDER BY i.id DESC")
 @NamedQuery(name = Item.COUNT_TOTAL_ITEMS, query = "SELECT count(i.id) from Item i")
-
+@Data @NoArgsConstructor
 public class Item implements Serializable {
 
 	public static final String FIND_BY_SELLER = "Item.FindBySeller";
@@ -69,9 +71,6 @@ public class Item implements Serializable {
 	@JoinColumn(name = "buyer", referencedColumnName = "id", nullable = true)
 	private User buyer;
 
-	public Item() {
-	}
-
 	public Item(String name, String description, float price, User seller) {
 		this.setName(name);
 		this.setDescription(description);
@@ -83,86 +82,6 @@ public class Item implements Serializable {
 	protected void onCreate() {
 		this.created = new Date();
 		this.updated = new Date();
-	}
-
-	public BigInteger getId() {
-		return this.id;
-	}
-
-	public void setId(BigInteger id) {
-		this.id = id;
-	}
-
-	public float getPrice() {
-		return this.price;
-	}
-
-	public void setPrice(float price) {
-		this.price = price;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Set<Image> getImage() {
-		return this.image;
-	}
-
-	public void setImage(Set<Image> image) {
-		this.image = image;
-	}
-
-	public boolean getSold() {
-		return this.sold;
-	}
-
-	public void setSold(boolean sold) {
-		this.sold = sold;
-	}
-
-	public Date getCreated() {
-		return this.created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public Date getUpdated() {
-		return this.updated;
-	}
-
-	public void setUpdated(Date updated) {
-		this.updated = updated;
-	}
-
-	public User getSeller() {
-		return this.seller;
-	}
-
-	public void setSeller(User seller) {
-		this.seller = seller;
-	}
-
-	public User getBuyer() {
-		return this.buyer;
-	}
-
-	public void setBuyer(User buyer) {
-		this.buyer = buyer;
 	}
 
 }
