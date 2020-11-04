@@ -17,8 +17,10 @@
     <junit-jupiter.version>5.5.0</junit-jupiter.version>
     <mockito-core.version>3.1.0</mockito-core.version>
     <flyway-core.version>6.5.5</flyway-core.version>
-    <liberty.env.POSTGRES_USER>postgres</liberty.env.POSTGRES_USER>
-    <liberty.env.POSTGRES_PASSWORD>example</liberty.env.POSTGRES_PASSWORD>
+<!--    <liberty.env.POSTGRES_USER>$POSTGRES_USER_USERNAME</liberty.env.POSTGRES_USER>-->
+<!--    <liberty.env.POSTGRES_PASSWORD>$POSTGRES_USER_PASSWORD</liberty.env.POSTGRES_PASSWORD>-->
+
+    <jakartaee>8.0</jakartaee>
   </properties>
 
   <dependencies>
@@ -84,6 +86,12 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.14</version>
+    </dependency>
+
     <!-- JWT -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
@@ -102,6 +110,12 @@
       <version>0.11.2</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>${jakartaee}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -114,6 +128,48 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
+      </plugin>
+
+      <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <serverName>${project.artifactId}</serverName>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <silent>true</silent>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>javax</groupId>
+                  <artifactId>javaee-api</artifactId>
+                  <version>${jakartaee}</version>
+                  <type>jar</type>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.postgresql</groupId>
+                  <artifactId>postgresql</artifactId>
+                  <version>42.2.10</version>
+                  <type>jar</type>
+                </artifactItem>
+
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

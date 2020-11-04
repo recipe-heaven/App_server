@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="new server">
+
+  <featureManager>
+    <feature>javaee-8.0</feature>
+    <feature>microProfile-3.3</feature>
+    <feature>jaxrs-2.1</feature>
+    <feature>jsonp-1.1</feature>
+    <feature>jsp-2.3</feature>
+    <feature>cdi-2.0</feature>
+    <feature>jpa-2.2</feature>
+  </featureManager>
+
+
+
+  <quickStartSecurity userName="duke" userPassword="dukeduke" />
+
+<!--  <dataSource id="DefaultDataSource" jndiName="jdbc/postgresql">-->
+<!--    <jdbcDriver libraryRef="postgresql-library" />-->
+<!--    <properties.postgresql  serverName="postgres_db" portNumber="5432" databaseName="${env.POSTGRES_USER_DB}" user="${env.USER_USERNAME}" password="${env.POSTGRES_USER_PASSWORD}" />-->
+<!--  </dataSource>-->
+
+
+
+<httpEndpoint id="defaultHttpEndpoint" httpPort="8080" httpsPort="4380" />
+<!--  <application context-root="recipe-heaven" type="war" id="recipe-heaven"-->
+<!--               location="recipe-heaven.war" name="recipe-heaven"/>-->
+  <webApplication location="recipe-heaven.war" contextRoot="recipe-heaven"/>
+
+<!--  <httpEndpoint httpPort="8080" httpsPort="4380"-->
+<!--                id="defaultHttpEndpoint" host="*" />-->
+
+<!--  <webApplication location="recipe-heaven.war" contextRoot="${app.context.root}"/>-->
+  <!-- POSTGRES DRIVER -->
+<!--  <library id="postgresql-library">-->
+<!--    <file name="${server.config.dir}/postgresql-42.2.16.jar" />-->
+<!--  </library>-->
+
+  <mpJwt id="defaultMpJwt" audiences="aud"></mpJwt>
+</server>
