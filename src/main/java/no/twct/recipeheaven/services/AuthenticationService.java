@@ -206,10 +206,14 @@ public class AuthenticationService {
 	@RolesAllowed(value = { Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME })
 	public Response changePassword(@HeaderParam("password") String newPassword) {
 
-		User user = getCurrentUser(tk.getName());
-		user.setPassword(hasher.generate(newPassword.toCharArray()));
-		em.merge(user);
-		return Response.ok(new DataResponse("Successfully changed password").getResponse()).build();
+		try {
+			User user = getCurrentUser(tk.getName());
+			user.setPassword(hasher.generate(newPassword.toCharArray()));
+			em.merge(user);
+			return Response.ok(new DataResponse("Successfully changed password").getResponse()).build();
+		} catch (Exception e) {
+			return Response.ok(new ErrorResponse("Failed to change password").getResponse()).status(500).build();
+		}
 
 	}
 }
