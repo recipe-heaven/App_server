@@ -4,10 +4,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
-import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.CreatableBase;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +17,9 @@ import java.util.List;
 @Table(name = "recipes")
 @EqualsAndHashCode(callSuper = true)
 public class Recipe extends CreatableBase {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
 
     String name;
 
@@ -30,19 +33,18 @@ public class Recipe extends CreatableBase {
 
     boolean visible;
 
-    @OneToMany
-    @JsonbTransient
-    @JoinTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "recipe_id")
     List<RecipeIngredient> recipeIngredients;
 
     String cookingSteps;
 
     String recommendedDrinks;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 
 }
