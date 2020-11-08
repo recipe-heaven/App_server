@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
-import no.twct.recipeheaven.CreatableBase;
+import no.twct.recipeheaven.lib.CreatableBase;
 
 import javax.persistence.*;
 import java.math.BigInteger;

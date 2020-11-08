@@ -1,4 +1,4 @@
-package no.twct.recipeheaven.search.entity;
+package no.twct.recipeheaven.search.control;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
