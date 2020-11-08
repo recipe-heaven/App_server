@@ -5,7 +5,7 @@ import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 
 import org.eclipse.microprofile.auth.LoginConfig;
 
-import no.twct.recipeheaven.lib.users.Group;
+import no.twct.recipeheaven.user.entity.Group;
 /* 
 	Sets application security settings / configurations
 */
