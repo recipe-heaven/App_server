@@ -40,6 +40,7 @@ import javax.ws.rs.core.Response.Status;
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 
+import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -49,14 +50,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-import no.twct.recipeheaven.lib.communication.JavaxMail;
-import no.twct.recipeheaven.lib.resource.Image;
-import no.twct.recipeheaven.lib.response.DataResponse;
-import no.twct.recipeheaven.lib.response.ErrorResponse;
-import no.twct.recipeheaven.lib.response.errors.ErrorMessage;
-import no.twct.recipeheaven.lib.store.Item;
-import no.twct.recipeheaven.lib.users.Group;
-import no.twct.recipeheaven.lib.users.User;
+import no.twct.recipeheaven.mail.JavaxMail;
+import no.twct.recipeheaven.resources.entity.Image;
+import no.twct.recipeheaven.response.DataResponse;
+import no.twct.recipeheaven.response.ErrorResponse;
+import no.twct.recipeheaven.response.errors.ErrorMessage;
+import no.twct.recipeheaven.user.entity.Group;
+import no.twct.recipeheaven.user.entity.User;
 
 @Path("shop")
 @Stateless

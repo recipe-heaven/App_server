@@ -1,6 +1,6 @@
 package no.twct.recipeheaven.startup;
 
-import no.twct.recipeheaven.lib.users.Group;
+import no.twct.recipeheaven.user.entity.Group;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
