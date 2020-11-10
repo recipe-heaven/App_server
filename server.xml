@@ -10,13 +10,15 @@
         <feature>jpa-2.2</feature>
     </featureManager>
 
-    <httpEndpoint id="defaultHttpEndpoint" httpPort="9080" httpsPort="9443"/>
+    <httpEndpoint id="defaultHttpEndpoint" httpPort="${env.APPSERVER_PORT}" httpsPort="9443"/>
 
     <quickStartSecurity userName="duke" userPassword="dukeduke"/>
+    <mpJwt id="defaultMpJwt" audiences="aud"/>
 
     <dataSource id="DefaultDataSource" jndiName="jdbc/postgresql">
         <jdbcDriver libraryRef="postgresql-library"/>
-        <properties.postgresql serverName="recipe_heaven_db" portNumber="5432" databaseName="recipe-heaven"
+        <properties.postgresql serverName="${env.POSTGRES_HOST}" portNumber="${env.POSTGRES_PORT}"
+                               databaseName="${env.POSTGRES_DB}"
                                user="${env.POSTGRES_USER}" password="${env.POSTGRES_PASSWORD}"/>
     </dataSource>
 
@@ -25,5 +27,4 @@
         <file name="${server.config.dir}/postgresql-42.2.16.jar"/>
     </library>
 
-    <mpJwt id="defaultMpJwt" audiences="aud"></mpJwt>
 </server>

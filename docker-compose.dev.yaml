@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  server:
+    volumes:
+      - type: bind
+        source: ./target
+        target: /config/dropins
