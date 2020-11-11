@@ -22,9 +22,7 @@ services:
       - type: volume
         source: postgres
         target: /var/lib/postgresql/data
-      - type: bind
-        source: ./docker_files/database
-        target: /docker-entrypoint-initdb.d
+
 
   # MAILING APPLICATION
   mail:
@@ -67,7 +65,7 @@ networks:
       driver: default
       config:
         - subnet: 10.50.50.0/24
-          gateway: ${MASTER_IP}
+
   frontend:
     name: recipe_heaven_frontend
     driver: bridge
