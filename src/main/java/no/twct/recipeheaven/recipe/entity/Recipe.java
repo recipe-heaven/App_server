@@ -5,8 +5,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.resources.entity.Image;
+import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +24,9 @@ public class Recipe extends CreatableBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
+    @ManyToOne
+    User creator;
+
     String name;
 
     String tags;
@@ -28,6 +34,11 @@ public class Recipe extends CreatableBase {
     String description;
 
     int cookTime = 0;
+
+    @ManyToOne
+    Image recipeImage;
+
+
 
     String type = Const.RECIPE_TYPE_NAME;
 
@@ -38,6 +49,8 @@ public class Recipe extends CreatableBase {
     List<RecipeIngredient> recipeIngredients;
 
     String cookingSteps;
+
+
 
     String recommendedDrinks;
 

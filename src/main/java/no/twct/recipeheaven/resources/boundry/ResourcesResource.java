@@ -40,10 +40,10 @@ public class ResourcesResource {
     String issuer;
 
     @PersistenceContext
-    EntityManager em;
+    EntityManager entityManager;
 
     @Inject
-    JsonWebToken tk;
+    JsonWebToken token;
 
     @Inject
     AuthenticationService authenticationService;
@@ -60,7 +60,7 @@ public class ResourcesResource {
     @Path("image/{id}")
     @Produces(MediaType.WILDCARD)
     public Response getImage(@PathParam("id") int id, @QueryParam("width") int width) {
-        Image im = em.find(Image.class, BigInteger.valueOf(id));
+        Image im = entityManager.find(Image.class, BigInteger.valueOf(id));
         if (im != null) {
             String[] split = im.getName().split("[.]");
             String   ext   = split[split.length - 1];
