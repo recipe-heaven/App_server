@@ -29,13 +29,14 @@ public class Recipe extends CreatableBase {
 
     String name;
 
-    String tags;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    List<RecipeTag> tags;
 
     String description;
 
     int cookTime = 0;
 
-    @ManyToOne
+    @OneToOne
     Image recipeImage;
 
 

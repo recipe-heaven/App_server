@@ -40,7 +40,7 @@ public class User implements Serializable {
     private String username;
 
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Size(min = 6)

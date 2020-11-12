@@ -3,6 +3,7 @@ package no.twct.recipeheaven.search.boundry;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.search.control.SearchOptions;
 import no.twct.recipeheaven.search.control.SearchService;
+import no.twct.recipeheaven.search.entity.SearchResultContainer;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -34,7 +35,7 @@ public class SearchResource {
     @PermitAll
     public Response search(SearchOptions options) {
         Response.ResponseBuilder resp;
-        var                      res = searchService.performMealRecipeMenuSearch(options);
+        SearchResultContainer    res = searchService.performMealRecipeMenuSearch(options);
         resp = Response.ok(new DataResponse(res).getResponse());
         return resp.build();
     }

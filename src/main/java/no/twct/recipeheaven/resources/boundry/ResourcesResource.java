@@ -59,28 +59,32 @@ public class ResourcesResource {
     @GET
     @Path("image/{id}")
     @Produces(MediaType.WILDCARD)
-    public Response getImage(@PathParam("id") int id, @QueryParam("width") int width) {
-        Image im = entityManager.find(Image.class, BigInteger.valueOf(id));
-        if (im != null) {
-            String[] split = im.getName().split("[.]");
-            String   ext   = split[split.length - 1];
-            StreamingOutput result = (OutputStream os) -> {
-                java.nio.file.Path image = Paths.get(imageStoragePath, im.getName());
+    public Response getPhoto(@PathParam("id") int id, @QueryParam("width") int width) {
+        Image imageObject = entityManager.find(Image.class, BigInteger.valueOf(id));
+        if (imageObject != null) {
+            StreamingOutput result = (OutputStream outputStream) -> {
+                java.nio.file.Path image = Paths.get(imageStoragePath, imageObject.getName());
                 if (width == 0) {
-                    Files.copy(image, os);
-                    os.flush();
+                    Files.copy(image, outputStream);
+                    outputStream.flush();
                 } else {
-                    Thumbnails.of(image.toFile()).size(width, width).outputFormat(ext).toOutputStream(os);
+                    Thumbnails.of(image.toFile())
+                              .size(width, width)
+                              .outputFormat("jpeg")
+                              .toOutputStream(outputStream);
                 }
             };
+
+            // Ask the browser to cache the image for 24 hours
             CacheControl cc = new CacheControl();
             cc.setMaxAge(86400);
             cc.setPrivate(true);
 
-            return Response.ok(result).cacheControl(cc).type(im.getMimeType()).build();
+            return Response.ok(result).cacheControl(cc).type(imageObject.getMimeType()).build();
         } else {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
-}
+
+    }

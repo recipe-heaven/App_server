@@ -4,8 +4,8 @@ import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.resources.entity.Image;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import no.twct.recipeheaven.user.entity.User;
+import no.twct.recipeheaven.util.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -28,12 +29,10 @@ import java.util.UUID;
 @Transactional
 public class RecipeService {
 
+    private final File imageDir = new File("/images");
     @Inject
     @ConfigProperty(name = "photo.storage.path", defaultValue = "images/items")
     String imageStoragePath;
-
-    private final File imageDir = new File(imageStoragePath);
-
     @Inject
     IdentityStoreHandler identityStoreHandler;
 
@@ -47,63 +46,53 @@ public class RecipeService {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Inject
-    JsonWebToken token;
 
     @Inject
     AuthenticationService authenticationService;
 
 
-    private User getCurrentUser(){
-        return entityManager.find(User.class, securityContext.getUserPrincipal().getName());
+    private User getCurrentUser() {
+        return authenticationService.getCurrentUser(securityContext.getUserPrincipal().getName());
     }
 
+
     public void createRecipe(Recipe recipe,
-                             FormDataMultiPart photos) {
-        User             user = this.getCurrentUser();
-        ArrayList<Image> p    = new ArrayList<>();
-
-
-        try{
-
-
+                               FormDataMultiPart photos
+    ) {
+        ArrayList<Image> formPhotos = new ArrayList<>();
+        try {
             List<FormDataBodyPart> images = photos.getFields("image");
-
-
-            if(images != null) {
-
-
+            if (images != null) {
                 for (FormDataBodyPart part : images) {
-                    InputStream        is   = part.getEntityAs(InputStream.class);
-                    ContentDisposition meta = part.getContentDisposition();
+                    InputStream        inputStream = part.getEntityAs(InputStream.class);
+                    ContentDisposition meta        = part.getFormDataContentDisposition();
 
-                    String uid = UUID.randomUUID().toString();
-                    Files.copy(is, Paths.get(imageDir.toString(), uid));
+                    String saveName = UUID.randomUUID().toString() + FileUtils.getFilePathExtension(meta.getFileName());
+                    long   size     = Files.copy(inputStream, Paths.get(imageDir.toString(), saveName));
 
                     Image photo = new Image();
-                    photo.setName(meta.getFileName());
-                    photo.setSize(meta.getSize());
-                    photo.setMimeType(meta.getType());
-                    photo.setOwner(recipe);
+                    photo.setName(saveName);
+                    photo.setSize(size);
+                    photo.setMimeType(URLConnection.guessContentTypeFromName(meta.getFileName()));
 
-                    p.add(photo);
+                    formPhotos.add(photo);
 
                     entityManager.persist(photo);
+                    System.out.println("cc");
                 }
 
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        recipe.setRecipeImage(p.get(0));
-        entityManager.persist(recipe);
-
+        recipe.setRecipeImage(formPhotos.get(0));
         recipe.setCreator(getCurrentUser());
+
         entityManager.persist(recipe);
     }
 
-    public Recipe getRecipe(int recipeId){
+    public Recipe getRecipe(int recipeId) {
         return entityManager.find(Recipe.class, recipeId);
     }
 
