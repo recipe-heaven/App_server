@@ -129,7 +129,6 @@ networks:
   frontend:
 
 volumes:
-  # posgres db
   postgres_db:
 
   app_images:
