@@ -1,26 +1,28 @@
 package no.twct.recipeheaven.search.entity;
 
 
-import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 import java.util.List;
 
 /**
  * Proves database access functions for search where
  * a regular entity object can not be used.
  */
+
 public class SearchDAO {
 
     @PersistenceContext
     EntityManager em;
 
     private final String recipeSearchQueryString =
-            "SELECT NEW no.twct.recipeheaven.search.entity.RecipeSearchResult(recipe.id, recipe.name , recipe.cookTime) " +
-                    "FROM Recipe recipe WHERE recipe.name LIKE :like OR recipe.tags LIKE :like";
+            "SELECT recipes.id, recipes.name, recipes.cook_time FROM recipes, recipetag, " +
+                    "recipes_recipetag WHERE recipes.id = recipes_recipetag.recipe_id AND recipetag.id = recipes_recipetag.tags_id " +
+                    "AND (recipes.name LIKE ? OR recipetag.tagname = ?)";
+
 
     /**
      * Searches recipes names and tags containing the provided search string and also is visible.
@@ -29,9 +31,10 @@ public class SearchDAO {
      * @param searchString the string to search for.
      * @return list of recipe results or empty list
      */
+
     public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString) {
-        String             queryString = recipeSearchQueryString + " AND recipe.visible = true";
-        TypedQuery<RecipeSearchResult> query       = em.createQuery(queryString, RecipeSearchResult.class);
+        String queryString = recipeSearchQueryString + " AND recipes.is_public = true";
+        Query  query       = em.createNativeQuery(queryString, "ScheduleResult");
         return this.searchRecipes(query, searchString);
     }
 
@@ -44,14 +47,16 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
     public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, User user) {
-        String queryString = recipeSearchQueryString + " AND recipe.creator = :id";
-        TypedQuery<RecipeSearchResult> query       = em.createQuery(queryString, RecipeSearchResult.class);
+        String queryString = recipeSearchQueryString + " AND recipes.creator_id = :id";
+        Query  query       = em.createNativeQuery(queryString, "ScheduleResult");
         query.setParameter("id", user);
         return this.searchRecipes(query, searchString);
     }
 
-    private List<RecipeSearchResult> searchRecipes(TypedQuery<RecipeSearchResult> query, String searchString) {
-        return query.setParameter("like", "%" + searchString + "%").getResultList();
+    private List<RecipeSearchResult> searchRecipes(Query query, String searchString) {
+        query.setParameter(1, "%" + searchString + "%");
+        query.setParameter(2, searchString);
+        return query.getResultList();
     }
 
 

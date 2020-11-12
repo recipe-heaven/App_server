@@ -13,6 +13,15 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
+@SqlResultSetMapping(
+        name = "ScheduleResult",
+        classes = {
+                @ConstructorResult(
+                        targetClass = no.twct.recipeheaven.search.entity.RecipeSearchResult.class,
+                        columns = {
+                                @ColumnResult(name = "id", type = BigInteger.class),
+                                @ColumnResult(name = "name", type = String.class),
+                                @ColumnResult(name = "cook_time", type = Integer.class)})})
 @Data
 @Entity
 @NoArgsConstructor
@@ -50,8 +59,6 @@ public class Recipe extends CreatableBase {
 
     @Column(name = "cooking_steps")
     String cookingSteps;
-
-
 
     @Column(name = "recommended_drinks")
     String recommendedDrinks;
