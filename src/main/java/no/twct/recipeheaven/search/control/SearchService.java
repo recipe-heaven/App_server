@@ -47,7 +47,7 @@ public class SearchService {
         if (user == null) {
             options.setOwnedOnly(false);
         }
-        var              resultContainer = new SearchResultContainer();
+        SearchResultContainer              resultContainer = new SearchResultContainer();
         List<ResultItem> results;
         if (options.ownedOnly) {
             results = searchOwnedOnly(options, user);
