@@ -1,78 +1,214 @@
 version: '3.8'
 
-x-database: &postgres
-  environment: &postgres-environment
-    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    POSTGRES_USER: ${POSTGRES_USER}
-    POSTGRES_DB: ${POSTGRES_DATABASE_NAME}
-    POSTGRES_PORT: ${POSTGRES_PORT}
-    POSTGRES_HOST: ${POSTGRES_IP}
+x-DbLoggin:
+  environment: &postgres-login # the POSTGRES user master password
+    POSTGRES_PASSWORD: '${POSTGRES_MASTER_PASSWORD}'
+
+    USER_USERNAME: '${POSTGRES_USER_USERNAME}'
+    USER_DB_NAME: '${POSTGRES_USER_DB}'
+    USER_PASSWORD: '${POSTGRES_USER_PASSWORD}'
+    POSTGRES_IP:  '${POSTGRES_IP}'
+    SQLURL: 'jdbc:postgresql://${POSTGRES_IP}:5432/${POSTGRES_USER_DB}'
+  networks: &postgres-ip
+    ipv4_address: '${POSTGRES_IP}'
 
 services:
-  # DATABASE SERVICE
-  postgres:
-    <<: *postgres
-    image: postgres
+  postgres_db:
     container_name: recipe_heaven_db
-    restart: unless-stopped
+    image: postgres
+
+    environment:
+      <<: *postgres-login
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+
     networks:
-      backend:
-        ipv4_address: ${POSTGRES_IP}
+      local_network: *postgres-ip
+
     volumes:
       - type: volume
-        source: postgres
+        source: postgres_db
         target: /var/lib/postgresql/data
 
+      - type: bind
+        source: ./docker_files/db_init
+        target: /docker-entrypoint-initdb.d
 
-  # MAILING APPLICATION
+    restart: unless-stopped
+    # MAILING APPLICATION
+
+
   mail:
     container_name: recipe_heaven_mail
     restart: unless-stopped
     image: namshi/smtp
     networks:
-      backend:
+      local_network:
       frontend:
 
-  # APPLICATION SERVER: API
+
   server:
-    build:
-      dockerfile: ./Dockerfile
-      context: ./
-    image: no.twct.recipeheaven/appserver
     container_name: recipe_heaven_server
-    restart: unless-stopped
-    environment:
-      <<: *postgres-environment
-      APPSERVER_PORT: ${APPSERVER_PORT}
-    networks:
-      frontend:
-      backend:
-        ipv4_address: ${APPSERVER_IP}
-    ports:
-      - ${APPSERVER_PORT}:${APPSERVER_PORT}
+    build:
+      context: ./
+      dockerfile: Dockerfile
 
-    depends_on:
-      - 'postgres'
+    image: no.twct.recipeheaven/appserver
+
+    environment:
+      <<: *postgres-login
+      PAYARA_ARGS: "--debug"
+
+
+
     volumes:
       - type: volume
         source: app_images
         target: /images
 
-# NETWORKS FOR ALL THE CONTAINERS
+
+    networks:
+      local_network:
+        ipv4_address: '${APPSERVER_IP}'
+      frontend:
+
+    ports:
+      - '9876:9876'
+
+
+
+    restart: unless-stopped
+
+  # https://github.com/mikael2/payara-postgres-nginx/
+#  nginx:
+#    container_name: nginx
+#
+#    build:
+#      context: ./docker_files/nginx_certbot
+#      dockerfile: Dockerfile
+#
+#    volumes:
+#      - type: volume
+#        source: nginx_data
+#        target: /etc/letsencrypt
+#      - type: bind
+#        source: /web/frontend
+#        target: /www/fractal/
+#
+#    env_file:
+#      - ./config_files/nginx_cerbot.env
+#
+#    environment:
+#      DOMAIN: '${API_DOMAIN}'
+#      LE_EMAIL: '${MAIL_USERNAME}'
+#    logging:
+#      options:
+#        max-size: '50m'
+#        max-file: '3'
+#
+#    ports:
+#      - '80:80'
+#      - '443:443'
+#
+#    networks:
+#      frontend:
+#      local_network:
+#
+#    depends_on:
+#      - web_server
+#
+#    restart: unless-stopped
+
 networks:
-  backend:
-    name: recipe_heaven_backend
+  local_network:
+    external: false
     ipam:
       driver: default
       config:
-        - subnet: 10.50.50.0/24
+        - subnet: 10.0.0.0/8
 
   frontend:
-    name: recipe_heaven_frontend
-    driver: bridge
 
-# NAMED VOLUMES FOR PERSISTENT STORAGE
 volumes:
-  postgres:
+  # posgres db
+  postgres_db:
+
   app_images:
+
   nginx_data:
+
+#x-database: &postgres
+#  environment: &postgres-environment
+#    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#    POSTGRES_USER: ${POSTGRES_USER}
+#    POSTGRES_DB: ${POSTGRES_DATABASE_NAME}
+#    POSTGRES_PORT: ${POSTGRES_PORT}
+#    POSTGRES_HOST: ${POSTGRES_IP}
+
+#services:
+#  # DATABASE SERVICE
+#  postgres:
+#    <<: *postgres
+#    image: postgres
+#    container_name: recipe_heaven_db
+#    restart: unless-stopped
+#    networks:
+#      backend:
+#        ipv4_address: ${POSTGRES_IP}
+#    volumes:
+#      - type: volume
+#        source: postgres
+#        target: /var/lib/postgresql/data
+#
+#
+#  # MAILING APPLICATION
+#  mail:
+#    container_name: recipe_heaven_mail
+#    restart: unless-stopped
+#    image: namshi/smtp
+#    networks:
+#      backend:
+#      frontend:
+#
+#  # APPLICATION SERVER: API
+#  server:
+#    build:
+#      dockerfile: ./Dockerfile
+#      context: ./
+#    image: no.twct.recipeheaven/appserver
+#    container_name: recipe_heaven_server
+#    restart: unless-stopped
+#    environment:
+#      <<: *postgres-environment
+#      APPSERVER_PORT: ${APPSERVER_PORT}
+#    networks:
+#      frontend:
+#      backend:
+#        ipv4_address: ${APPSERVER_IP}
+#    ports:
+#      - ${APPSERVER_PORT}:${APPSERVER_PORT}
+#
+#    depends_on:
+#      - 'postgres'
+#    volumes:
+#      - type: volume
+#        source: app_images
+#        target: /images
+#
+## NETWORKS FOR ALL THE CONTAINERS
+#networks:
+#  backend:
+#    name: recipe_heaven_backend
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 10.50.50.0/24
+#
+#  frontend:
+#    name: recipe_heaven_frontend
+#    driver: bridge
+#
+## NAMED VOLUMES FOR PERSISTENT STORAGE
+#volumes:
+#  postgres:
+#  app_images:
+#  nginx_data:
