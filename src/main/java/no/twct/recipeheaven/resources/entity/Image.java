@@ -2,7 +2,7 @@ package no.twct.recipeheaven.resources.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.services.Item;
+import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,8 +29,5 @@ public class Image implements Serializable {
 
 	private float size;
 
-	@JoinColumn(name = "owner", referencedColumnName = "id", nullable = true)
-	@ManyToOne
-	private Item owner;
 
 }

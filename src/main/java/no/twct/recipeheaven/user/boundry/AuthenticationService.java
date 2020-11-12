@@ -34,6 +34,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
+import java.util.logging.Level;
 
 @Path("authentication")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -131,6 +132,9 @@ public class AuthenticationService {
     @Path("create")
     public Response createUser(@HeaderParam("name") String name, @HeaderParam("username") String username,
                                @HeaderParam("password") String password, @HeaderParam("email") String email) {
+
+
+
         ResponseBuilder resp;
         try {
             User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email)

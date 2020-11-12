@@ -22,3 +22,6 @@ server
 /.nb-gradle/
 
 .DS_store
+*.war
+
+.env

@@ -1,6 +1,7 @@
 package no.twct.recipeheaven.search.entity;
 
 
+import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.EntityManager;
@@ -29,8 +30,8 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
     public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString) {
-        var queryString = recipeSearchQueryString + " AND recipe.visible = true";
-        var query       = em.createQuery(queryString, RecipeSearchResult.class);
+        String             queryString = recipeSearchQueryString + " AND recipe.visible = true";
+        TypedQuery<RecipeSearchResult> query       = em.createQuery(queryString, RecipeSearchResult.class);
         return this.searchRecipes(query, searchString);
     }
 
@@ -43,8 +44,8 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
     public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, User user) {
-        var queryString = recipeSearchQueryString + " AND recipe.creator = :id";
-        var query       = em.createQuery(queryString, RecipeSearchResult.class);
+        String queryString = recipeSearchQueryString + " AND recipe.creator = :id";
+        TypedQuery<RecipeSearchResult> query       = em.createQuery(queryString, RecipeSearchResult.class);
         query.setParameter("id", user);
         return this.searchRecipes(query, searchString);
     }

@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.resources.entity.Image;
+import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -21,19 +23,26 @@ public class Recipe extends CreatableBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
+    @ManyToOne
+    User creator;
+
     String name;
 
-    String tags;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    List<RecipeTag> tags;
 
     String description;
 
     @Column(name = "cook_time")
     int cookTime = 0;
 
+    @OneToOne
+    Image recipeImage;
+
     String type = Const.RECIPE_TYPE_NAME;
 
     @Column(name = "is_public")
-    boolean isPublic;
+    boolean visible;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "recipe_id")
@@ -41,6 +50,8 @@ public class Recipe extends CreatableBase {
 
     @Column(name = "cooking_steps")
     String cookingSteps;
+
+
 
     @Column(name = "recommended_drinks")
     String recommendedDrinks;
