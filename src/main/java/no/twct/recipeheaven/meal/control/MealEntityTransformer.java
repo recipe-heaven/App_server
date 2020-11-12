@@ -3,8 +3,10 @@ package no.twct.recipeheaven.meal.control;
 import no.twct.recipeheaven.meal.entity.Meal;
 import no.twct.recipeheaven.meal.entity.MinifiedMealDTO;
 import no.twct.recipeheaven.recipe.control.RecipeEntityTransformer;
+import no.twct.recipeheaven.recipe.entity.MinifiedRecipeDTO;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -26,7 +28,7 @@ public class MealEntityTransformer {
         MinifiedMealDTO mealSimpleDetailsDTO = new MinifiedMealDTO();
         mealSimpleDetailsDTO.setName(meal.getName());
         mealSimpleDetailsDTO.setOwner(meal.getCreator().getId());
-        var recipes = meal.getRecipes().stream().map(recipeEntityTransformer::createSimpleRecipeDTO).collect(Collectors.toList());
+        List<MinifiedRecipeDTO> recipes = meal.getRecipes().stream().map(recipeEntityTransformer::createSimpleRecipeDTO).collect(Collectors.toList());
         mealSimpleDetailsDTO.setRecipes(recipes);
         return mealSimpleDetailsDTO;
     }

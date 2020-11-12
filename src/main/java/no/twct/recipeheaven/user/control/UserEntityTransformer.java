@@ -14,7 +14,7 @@ public class UserEntityTransformer {
      * @param user the user to transform
      */
     public UserDetailsDTO createUserDetailsDTO(User user) {
-        var userDetails = new UserDetailsDTO();
+        UserDetailsDTO userDetails = new UserDetailsDTO();
         userDetails.setId(user.getId());
         userDetails.setUsername(user.getUsername());
         return userDetails;
