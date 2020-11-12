@@ -29,8 +29,5 @@ public class Image implements Serializable {
 
 	private float size;
 
-//	@JoinColumn(name = "owner", referencedColumnName = "id", nullable = true)
-//	@ManyToOne
-//	private Recipe owner;
 
 }
