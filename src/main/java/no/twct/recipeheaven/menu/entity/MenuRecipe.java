@@ -1,25 +1,24 @@
 package no.twct.recipeheaven.menu.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.Const;
-import no.twct.recipeheaven.lib.CreatableBase;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "menus")
-@EqualsAndHashCode(callSuper = true)
-public class Menu extends CreatableBase {
+@Table(name = "menu_recipe")
+public class MenuRecipe {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
 
     String name;
-
-    String type = Const.MENU_TYPE_NAME;
 
     boolean isPublic;
 
@@ -29,7 +28,7 @@ public class Menu extends CreatableBase {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "meal_id")
-    List<MenuMeal> meals;
+    List<MenuRecipe> meals;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
