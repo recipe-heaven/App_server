@@ -23,3 +23,5 @@ server
 
 .DS_store
 *.war
+
+.env
