@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,9 +26,9 @@ public class Meal extends CreatableBase {
     @Column(name = "is_public")
     boolean isPublic;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "meal_type_link")
-    List<MealRecipeType> mealRecipeTypes;
+    @ManyToMany
+    @JoinTable(name = "meal_recipes")
+    List<Recipe> recipes;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;

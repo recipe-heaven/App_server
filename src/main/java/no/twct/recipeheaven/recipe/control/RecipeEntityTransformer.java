@@ -20,6 +20,7 @@ public class RecipeEntityTransformer {
     private void setBaseDtoValues(RecipeDTO dto, Recipe recipe) {
         dto.setId(recipe.getId());
         dto.setName(recipe.getName());
+        dto.setType(recipe.getType());
         dto.setUpdated(recipe.getUpdated());
         dto.setImage(recipe.getRecipeImage());
         dto.setCookTime(recipe.getCookTime());

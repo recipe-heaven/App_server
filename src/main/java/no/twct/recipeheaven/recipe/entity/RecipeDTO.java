@@ -14,6 +14,8 @@ import java.util.Date;
 public class RecipeDTO extends OwnableEntity {
     String name;
 
+    String type;
+
     int cookTime;
 
     String description;
