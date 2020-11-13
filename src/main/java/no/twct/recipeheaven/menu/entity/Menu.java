@@ -21,14 +21,15 @@ public class Menu extends CreatableBase {
 
     String type = Const.MENU_TYPE_NAME;
 
+    @Column(name = "is_public")
     boolean isPublic;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "recipe_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "menu_recipe_link")
     List<MenuRecipe> recipes;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "meal_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "menu_meal_link")
     List<MenuMeal> meals;
 
     @Temporal(TemporalType.TIMESTAMP)

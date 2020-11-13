@@ -2,31 +2,24 @@ package no.twct.recipeheaven.menu.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.twct.recipeheaven.meal.entity.Meal;
 
 import javax.persistence.*;
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "menu_meal")
+@Table(name = "menu_meals")
 public class MenuMeal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
-    String name;
+    @OneToOne
+    private Meal meal;
 
-    boolean isPublic;
+    private int day;
 
-
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated;
 }
