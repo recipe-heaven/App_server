@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * Data class for search result for a menu.
@@ -12,9 +11,9 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MenuSearchResult extends Result {
-    List<String> days;
+    Integer[] days;
 
-    public MenuSearchResult(BigInteger id, String name, List<String> days) {
+    public MenuSearchResult(BigInteger id, String name, Integer[] days) {
         this.setId(id);
         this.setName(name);
         this.setDays(days);

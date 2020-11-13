@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.twct.recipeheaven.Const.RECIPE_TYPE_NAME;
+import static no.twct.recipeheaven.Const.*;
 
 
 /**
@@ -47,8 +47,9 @@ public class SearchService {
         if (user == null) {
             options.setOwnedOnly(false);
         }
-        SearchResultContainer              resultContainer = new SearchResultContainer();
-        List<ResultItem> results;
+
+        SearchResultContainer resultContainer = new SearchResultContainer();
+        List<ResultItem>      results;
         if (options.ownedOnly) {
             results = searchOwnedOnly(options, user);
         } else {
@@ -70,13 +71,13 @@ public class SearchService {
     List<ResultItem> searchOwnedOnly(SearchOptions options, User user) {
         List<ResultItem> results = new ArrayList<ResultItem>();
         if (options.includeMeals) {
-
+            searchDAO.searchMealsByNameOwnerOnly(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
-
+            searchDAO.searchMenusByNameOwnerOnly(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
         }
         if (options.includeRecipes) {
-            searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, user).forEach(recipe -> {
+            searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, options.recipeType, user.getId().intValue()).forEach(recipe -> {
                 results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
             });
         }
@@ -94,13 +95,13 @@ public class SearchService {
     List<ResultItem> search(SearchOptions options) {
         List<ResultItem> results = new ArrayList<ResultItem>();
         if (options.includeMeals) {
-
+            searchDAO.searchMealsByName(options.searchString).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
-
+            searchDAO.searchMenusByName(options.searchString).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
         }
         if (options.includeRecipes) {
-            searchDAO.searchRecipesByNameAndTags(options.searchString).forEach(recipe -> {
+            searchDAO.searchRecipesByNameAndTags(options.searchString, options.recipeType).forEach(recipe -> {
                 results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
             });
         }
