@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.twct.recipeheaven.Const.MEAL_TYPE_NAME;
 import static no.twct.recipeheaven.Const.RECIPE_TYPE_NAME;
 
 
@@ -43,18 +44,10 @@ public class SearchService {
      * @return returns the result container
      */
     public SearchResultContainer performMealRecipeMenuSearch(SearchOptions options) {
-        System.out.println("TOKEN OWNER:" + jsonWebToken.getName());
         User user = authenticationService.getCurrentUser(jsonWebToken.getName());
         if (user == null) {
-            System.out.println("NO USER!!!!");
             options.setOwnedOnly(false);
         }
-        System.out.println(options.includeMeals);
-        System.out.println(options.includeMenus);
-        System.out.println(options.includeRecipes);
-        System.out.println(options.ownedOnly);
-        System.out.println(options.recipeType);
-        System.out.println(options.searchString);
 
         SearchResultContainer resultContainer = new SearchResultContainer();
         List<ResultItem>      results;
@@ -79,7 +72,7 @@ public class SearchService {
     List<ResultItem> searchOwnedOnly(SearchOptions options, User user) {
         List<ResultItem> results = new ArrayList<ResultItem>();
         if (options.includeMeals) {
-
+            searchDAO.searchMealsByNameOwnerOnly(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
 
@@ -103,7 +96,7 @@ public class SearchService {
     List<ResultItem> search(SearchOptions options) {
         List<ResultItem> results = new ArrayList<ResultItem>();
         if (options.includeMeals) {
-
+            searchDAO.searchMealsByName(options.searchString).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
 

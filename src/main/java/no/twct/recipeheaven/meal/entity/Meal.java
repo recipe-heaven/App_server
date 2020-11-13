@@ -8,10 +8,19 @@ import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-
+@SqlResultSetMapping(
+        name = "MealSearchResult",
+        classes = {
+                @ConstructorResult(
+                        targetClass = no.twct.recipeheaven.search.entity.MealSearchResult.class,
+                        columns = {
+                                @ColumnResult(name = "id", type = BigInteger.class),
+                                @ColumnResult(name = "name", type = String.class),
+                                @ColumnResult(name = "type", type = String[].class)})})
 @Data
 @Entity
 @NoArgsConstructor
