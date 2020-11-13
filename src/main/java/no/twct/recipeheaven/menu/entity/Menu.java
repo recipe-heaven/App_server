@@ -3,12 +3,12 @@ package no.twct.recipeheaven.menu.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -17,9 +17,24 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class Menu extends CreatableBase {
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    String name;
+
+    String type = Const.MENU_TYPE_NAME;
+
+    @Column(name = "is_public")
+    boolean isPublic;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "menu_recipe_link")
+    List<MenuRecipe> recipes;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "menu_meal_link")
+    List<MenuMeal> meals;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updated;
 }
