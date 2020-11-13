@@ -70,7 +70,7 @@ public class ResourcesResource {
                 } else {
                     Thumbnails.of(image.toFile())
                               .size(width, width)
-                              .outputFormat("jpeg")
+                              .outputFormat(imageObject.getMimeType())
                               .toOutputStream(outputStream);
                 }
             };
