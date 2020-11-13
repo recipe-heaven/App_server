@@ -1,8 +1,6 @@
 package no.twct.recipeheaven.search.entity;
 
 
-import no.twct.recipeheaven.user.entity.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -32,9 +30,13 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
 
-    public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString) {
+    public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString, String recipeType) {
         String queryString = recipeSearchQueryString + " AND recipes.is_public = true";
-        Query  query       = em.createNativeQuery(queryString, "ScheduleResult");
+        if (!recipeType.isBlank()) {
+            queryString += " AND recipes.type = ?";
+        }
+        Query query = em.createNativeQuery(queryString, "ScheduleResult");
+        if (!recipeType.isBlank()) query.setParameter(3, recipeType);
         return this.searchRecipes(query, searchString);
     }
 
@@ -46,10 +48,14 @@ public class SearchDAO {
      * @param searchString the string to search for.
      * @return list of recipe results or empty list
      */
-    public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, User user) {
-        String queryString = recipeSearchQueryString + " AND recipes.creator_id = :id";
-        Query  query       = em.createNativeQuery(queryString, "ScheduleResult");
-        query.setParameter("id", user);
+    public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, String recipeType, int userId) {
+        String queryString = recipeSearchQueryString + " AND recipes.creator_id = ?";
+        if (!recipeType.isBlank()) {
+            queryString += " AND recipes.type = ?";
+        }
+        Query query = em.createNativeQuery(queryString, "ScheduleResult");
+        if (!recipeType.isBlank()) query.setParameter(4, recipeType);
+        query.setParameter(3, userId);
         return this.searchRecipes(query, searchString);
     }
 

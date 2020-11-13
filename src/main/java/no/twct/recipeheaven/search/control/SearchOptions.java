@@ -13,14 +13,35 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SearchOptions {
 
-    String searchString;
+    /**
+     * The string to match for
+     */
+    String searchString = "";
 
+    /**
+     * Recipe type to search for : starter, dessert, main
+     */
+    String recipeType = "";
+
+    /**
+     * Search for user owned items only. Which
+     * will be the user currently logged in.
+     */
     boolean ownedOnly;
 
+    /**
+     * Include meals in the search
+     */
     boolean includeMeals;
 
+    /**
+     * Include menus in the search
+     */
     boolean includeMenus;
 
+    /**
+     * Include recipes in the search
+     */
     boolean includeRecipes;
 
 }
