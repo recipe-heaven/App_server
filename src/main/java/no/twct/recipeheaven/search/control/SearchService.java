@@ -43,12 +43,21 @@ public class SearchService {
      * @return returns the result container
      */
     public SearchResultContainer performMealRecipeMenuSearch(SearchOptions options) {
+        System.out.println("TOKEN OWNER:" + jsonWebToken.getName());
         User user = authenticationService.getCurrentUser(jsonWebToken.getName());
         if (user == null) {
+            System.out.println("NO USER!!!!");
             options.setOwnedOnly(false);
         }
-        SearchResultContainer              resultContainer = new SearchResultContainer();
-        List<ResultItem> results;
+        System.out.println(options.includeMeals);
+        System.out.println(options.includeMenus);
+        System.out.println(options.includeRecipes);
+        System.out.println(options.ownedOnly);
+        System.out.println(options.recipeType);
+        System.out.println(options.searchString);
+
+        SearchResultContainer resultContainer = new SearchResultContainer();
+        List<ResultItem>      results;
         if (options.ownedOnly) {
             results = searchOwnedOnly(options, user);
         } else {
@@ -76,7 +85,7 @@ public class SearchService {
 
         }
         if (options.includeRecipes) {
-            searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, user).forEach(recipe -> {
+            searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, options.recipeType, user.getId().intValue()).forEach(recipe -> {
                 results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
             });
         }
@@ -100,7 +109,7 @@ public class SearchService {
 
         }
         if (options.includeRecipes) {
-            searchDAO.searchRecipesByNameAndTags(options.searchString).forEach(recipe -> {
+            searchDAO.searchRecipesByNameAndTags(options.searchString, options.recipeType).forEach(recipe -> {
                 results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
             });
         }

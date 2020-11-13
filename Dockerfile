@@ -1,4 +1,4 @@
-FROM  payara/micro
+FROM  payara/micro:jdk11
 #FROM payara/server-full:5.2020.4-jdk11
 
 USER root
