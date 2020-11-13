@@ -19,7 +19,7 @@ public class SearchDAO {
     EntityManager em;
 
     private final String recipeSearchQueryString =
-            "SELECT recipes.id, recipes.name, recipes.cook_time FROM recipes, recipetag, " +
+            "SELECT DISTINCT recipes.id, recipes.name, recipes.cook_time FROM recipes, recipetag, " +
                     "recipes_recipetag WHERE recipes.id = recipes_recipetag.recipe_id AND recipetag.id = recipes_recipetag.tags_id " +
                     "AND (recipes.name LIKE ? OR recipetag.tagname = ?)";
 
