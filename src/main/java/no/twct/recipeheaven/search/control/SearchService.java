@@ -14,8 +14,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.twct.recipeheaven.Const.MEAL_TYPE_NAME;
-import static no.twct.recipeheaven.Const.RECIPE_TYPE_NAME;
+import static no.twct.recipeheaven.Const.*;
 
 
 /**
@@ -75,7 +74,7 @@ public class SearchService {
             searchDAO.searchMealsByNameOwnerOnly(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
-
+            searchDAO.searchMenusByNameOwnerOnly(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
         }
         if (options.includeRecipes) {
             searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, options.recipeType, user.getId().intValue()).forEach(recipe -> {
@@ -99,7 +98,7 @@ public class SearchService {
             searchDAO.searchMealsByName(options.searchString).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
-
+            searchDAO.searchMenusByName(options.searchString).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
         }
         if (options.includeRecipes) {
             searchDAO.searchRecipesByNameAndTags(options.searchString, options.recipeType).forEach(recipe -> {
