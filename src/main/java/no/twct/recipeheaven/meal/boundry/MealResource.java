@@ -1,8 +1,9 @@
 package no.twct.recipeheaven.meal.boundry;
 
 import no.twct.recipeheaven.meal.control.MealService;
+import no.twct.recipeheaven.meal.entity.FullMealDTO;
 import no.twct.recipeheaven.meal.entity.Meal;
-import no.twct.recipeheaven.meal.entity.MinifiedMealDTO;
+import no.twct.recipeheaven.meal.entity.SimpleMealDTO;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.user.entity.Group;
 
@@ -37,30 +38,30 @@ public class MealResource {
     }
 
     /**
-     * Returns a meal with the given id
+     * Returns a simplified meal with the given id.
      *
      * @param id of the meal
      * @return returns success/fail response
      */
     @GET
-    @Path("get/simple/{id}")
+    @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealSimple(@PathParam("id") BigInteger id) {
-        MinifiedMealDTO m = mealService.getMinifiedMealDetail(id);
+        SimpleMealDTO m = mealService.getSimpleMealDTO(id);
         return Response.ok(new DataResponse(m).getResponse()).build();
     }
 
     /**
-     * Returns a meal with the given id
+     * Returns a meal with all details.
      *
      * @param id of the meal
      * @return returns success/fail response
      */
     @GET
-    @Path("get/full/{id}")
+    @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealFull(@PathParam("id") BigInteger id) {
-        Meal m = mealService.getFullMealDetails(id);
+        FullMealDTO m = mealService.getFullMealDTO(id);
         return Response.ok(new DataResponse(m).getResponse()).build();
     }
 }

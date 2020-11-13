@@ -1,8 +1,9 @@
 package no.twct.recipeheaven.meal.control;
 
 
+import no.twct.recipeheaven.meal.entity.FullMealDTO;
 import no.twct.recipeheaven.meal.entity.Meal;
-import no.twct.recipeheaven.meal.entity.MinifiedMealDTO;
+import no.twct.recipeheaven.meal.entity.SimpleMealDTO;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -43,12 +44,12 @@ public class MealService {
      * @param id the id of the meal to find
      * @return returns a meal object, or error response.
      */
-    public MinifiedMealDTO getMinifiedMealDetail(BigInteger id) {
-        return mealEntityTransformer.createMealDetailsDTO(em.find(Meal.class, id));
+    public SimpleMealDTO getSimpleMealDTO(BigInteger id) {
+        return mealEntityTransformer.createSimpleMealDTO(em.find(Meal.class, id));
     }
 
-    public Meal getFullMealDetails(BigInteger id) {
-        return em.find(Meal.class, id);
+    public FullMealDTO getFullMealDTO(BigInteger id) {
+        return mealEntityTransformer.createFullMealDTO(em.find(Meal.class, id));
     }
 
 

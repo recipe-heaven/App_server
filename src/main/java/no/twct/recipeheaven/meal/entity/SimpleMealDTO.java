@@ -3,16 +3,17 @@ package no.twct.recipeheaven.meal.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
+import no.twct.recipeheaven.recipe.entity.RecipeDTO;
 
 import java.util.List;
 
 /**
- * Full projection of a meal, with all recipes details.
+ * Simplified meal DTO object, which only contains
+ * key details for representing a meal.
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class FullMealDTO extends MealDTO {
-    List<FullRecipeDTO> recipes;
+public class SimpleMealDTO extends MealDTO {
+    List<RecipeDTO> recipes;
 }
