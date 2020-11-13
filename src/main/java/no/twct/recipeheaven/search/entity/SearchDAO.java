@@ -154,7 +154,7 @@ public class SearchDAO {
 
 
     /**
-     * Search for meals by its name and return the result.
+     * Search for menus by its name and return the result.
      *
      * @param searchString the string to search for
      * @return returns search result
@@ -169,10 +169,10 @@ public class SearchDAO {
     }
 
     /**
-     * Search for meals by its name and the owner of the meal and return the result.
+     * Search for menus by its name and the owner of the menu and return the result.
      *
      * @param searchString the string to search for
-     * @param userId       the owner of the meals
+     * @param userId       the owner of the menus
      * @return returns search result
      */
     public List<MenuSearchResult> searchMenusByNameOwnerOnly(String searchString, BigInteger userId) {
