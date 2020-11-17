@@ -30,7 +30,6 @@ public class MealResource {
      * @return returns success/fail response
      */
     @POST
-    @Path("create")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response createMeal(Meal meal) {
         mealService.createMeal(meal);
