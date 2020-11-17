@@ -21,7 +21,9 @@ import java.util.List;
                         columns = {
                                 @ColumnResult(name = "id", type = BigInteger.class),
                                 @ColumnResult(name = "name", type = String.class),
-                                @ColumnResult(name = "cook_time", type = Integer.class)})})
+                                @ColumnResult(name = "cook_time", type = Integer.class),
+                                @ColumnResult(name = "type", type = String.class)
+                        })})
 @Data
 @Entity
 @NoArgsConstructor
