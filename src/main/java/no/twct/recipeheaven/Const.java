@@ -12,5 +12,4 @@ public final class Const {
     public static final String MEAL_COURSE_NAME = "course";
     public static final String MEAL_DESSERT_NAME = "dessert";
 
-    public static final String MENU_TYPE_NAMEksjd = "menu";
 }

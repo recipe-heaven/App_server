@@ -1,6 +1,11 @@
 package no.twct.recipeheaven.recipe.control;
 
+import no.twct.recipeheaven.meal.entity.FullMealDTO;
+import no.twct.recipeheaven.meal.entity.Meal;
+import no.twct.recipeheaven.meal.entity.SimpleMealDTO;
+import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
 import no.twct.recipeheaven.recipe.entity.Recipe;
+import no.twct.recipeheaven.recipe.entity.RecipeDTO;
 import no.twct.recipeheaven.resources.entity.Image;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import no.twct.recipeheaven.user.entity.User;
@@ -19,6 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.io.File;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,10 +35,14 @@ import java.util.UUID;
 @Transactional
 public class RecipeService {
 
-    private final File imageDir = new File("/images");
+
     @Inject
     @ConfigProperty(name = "photo.storage.path", defaultValue = "images/items")
     String imageStoragePath;
+
+    @Inject
+    RecipeEntityTransformer recipeEntityTransformer;
+
     @Inject
     IdentityStoreHandler identityStoreHandler;
 
@@ -68,7 +78,7 @@ public class RecipeService {
                     ContentDisposition meta        = part.getFormDataContentDisposition();
 
                     String saveName = UUID.randomUUID().toString() + FileUtils.getFilePathExtension(meta.getFileName());
-                    long   size     = Files.copy(inputStream, Paths.get(imageDir.toString(), saveName));
+                    long   size     = Files.copy(inputStream, Paths.get(imageStoragePath, saveName));
 
                     Image photo = new Image();
                     photo.setName(saveName);
@@ -92,8 +102,13 @@ public class RecipeService {
         entityManager.persist(recipe);
     }
 
-    public Recipe getRecipe(int recipeId) {
-        return entityManager.find(Recipe.class, recipeId);
+
+
+    public RecipeDTO getSimpleRecipeDTO(BigInteger id) {
+        return recipeEntityTransformer.createSimpleRecipeDTO(entityManager.find(Recipe.class, id));
     }
 
+    public FullRecipeDTO getFullRecipeDTO(BigInteger id) {
+        return recipeEntityTransformer.createFullRecipeDTO(entityManager.find(Recipe.class, id));
+    }
 }
