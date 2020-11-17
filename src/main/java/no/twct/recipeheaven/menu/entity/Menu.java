@@ -3,13 +3,22 @@ package no.twct.recipeheaven.menu.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
+@SqlResultSetMapping(
+        name = "MenuSearchResult",
+        classes = {
+                @ConstructorResult(
+                        targetClass = no.twct.recipeheaven.search.entity.MenuSearchResult.class,
+                        columns = {
+                                @ColumnResult(name = "id", type = BigInteger.class),
+                                @ColumnResult(name = "name", type = String.class),
+                                @ColumnResult(name = "days", type = Integer[].class)})})
 @Data
 @Entity
 @NoArgsConstructor
@@ -18,8 +27,6 @@ import java.util.List;
 public class Menu extends CreatableBase {
 
     String name;
-
-    String type = Const.MENU_TYPE_NAME;
 
     @Column(name = "is_public")
     boolean isPublic;

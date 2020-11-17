@@ -4,8 +4,9 @@ import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.search.control.SearchOptions;
 import no.twct.recipeheaven.search.control.SearchService;
 import no.twct.recipeheaven.search.entity.SearchResultContainer;
+import no.twct.recipeheaven.user.entity.Group;
 
-import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -32,7 +33,7 @@ public class SearchResource {
      * @return returns search result
      */
     @POST
-    @PermitAll
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response search(SearchOptions options) {
         Response.ResponseBuilder resp;
         SearchResultContainer    res = searchService.performMealRecipeMenuSearch(options);

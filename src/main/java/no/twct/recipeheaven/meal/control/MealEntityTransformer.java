@@ -39,8 +39,8 @@ public class MealEntityTransformer {
     public SimpleMealDTO createSimpleMealDTO(Meal meal) {
         SimpleMealDTO mealSimpleDetailsDTO = new SimpleMealDTO();
         setBaseDtoValues(mealSimpleDetailsDTO, meal);
-        List<RecipeDTO> recipes = meal.getMealRecipeTypes().stream()
-                .map((mealType) -> recipeEntityTransformer.createSimpleRecipeDTO(mealType.getRecipe())).collect(Collectors.toList());
+        List<RecipeDTO> recipes = meal.getRecipes().stream()
+                .map(recipeEntityTransformer::createSimpleRecipeDTO).collect(Collectors.toList());
         mealSimpleDetailsDTO.setRecipes(recipes);
         return mealSimpleDetailsDTO;
     }
@@ -55,8 +55,8 @@ public class MealEntityTransformer {
     public FullMealDTO createFullMealDTO(Meal meal) {
         FullMealDTO mealSimpleDetailsDTO = new FullMealDTO();
         setBaseDtoValues(mealSimpleDetailsDTO, meal);
-        List<FullRecipeDTO> recipes = meal.getMealRecipeTypes().stream()
-                .map((mealType) -> recipeEntityTransformer.createFullRecipeDTO(mealType.getRecipe())).collect(Collectors.toList());
+        List<FullRecipeDTO> recipes = meal.getRecipes().stream()
+                .map(recipeEntityTransformer::createFullRecipeDTO).collect(Collectors.toList());
         mealSimpleDetailsDTO.setRecipes(recipes);
         return mealSimpleDetailsDTO;
     }
