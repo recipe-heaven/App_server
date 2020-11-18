@@ -21,6 +21,7 @@ public class RecipeEntityTransformer {
         dto.setId(recipe.getId());
         dto.setName(recipe.getName());
         dto.setType(recipe.getType());
+        dto.setPublic(recipe.isPublic());
         dto.setUpdated(recipe.getUpdated());
         dto.setImage(recipe.getRecipeImage());
         dto.setCookTime(recipe.getCookTime());
@@ -50,7 +51,7 @@ public class RecipeEntityTransformer {
         FullRecipeDTO fullRecipeDTP = new FullRecipeDTO();
         setBaseDtoValues(fullRecipeDTP, recipe);
         fullRecipeDTP.setTags(recipe.getTags());
-        fullRecipeDTP.setPublic(recipe.isVisible());
+        fullRecipeDTP.setPublic(recipe.isPublic());
         fullRecipeDTP.setCookingSteps(recipe.getCookingSteps());
         fullRecipeDTP.setRecipeIngredients(recipe.getRecipeIngredients());
         fullRecipeDTP.setRecommendedDrinks(recipe.getRecommendedDrinks());

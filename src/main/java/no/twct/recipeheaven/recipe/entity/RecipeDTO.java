@@ -20,6 +20,8 @@ public class RecipeDTO extends OwnableEntity {
 
     String description;
 
+    boolean isPublic;
+
     private Date updated;
 
     private Image image;
