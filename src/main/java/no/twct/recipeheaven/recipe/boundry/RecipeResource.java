@@ -17,6 +17,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Path("recipe")
@@ -53,6 +55,28 @@ public class RecipeResource {
     public Response getRecipeSimple(@PathParam("id") BigInteger recipeId) {
         var simple = recipeService.getSimpleRecipe(recipeId);
         return Response.ok(new DataResponse(simple).getResponse()).build();
+    }
+
+    /**
+     * Returns a list of simple recipes from ids provided as query param ?ids=1,2,3,4
+     *
+     * @param recipeIds the id of the recipes to get as numbered strings comma separated
+     * @return returns a response with list of simple recipes or empty list or server error.
+     */
+    @GET
+    @Path("multiple/simple")
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
+    public Response getMultipleSimple(@QueryParam("ids") String recipeIds) {
+        try {
+            var              idsAsString = recipeIds.split(",");
+            List<BigInteger> idList      = new ArrayList<BigInteger>();
+            for (var id : idsAsString) {
+                idList.add(BigInteger.valueOf(Integer.parseInt(id)));
+            }
+            return Response.ok(new DataResponse(recipeService.getMultiplesimple(idList)).getResponse()).build();
+        } catch (Exception e) {
+        }
+        return Response.serverError().build();
     }
 
     /**

@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Transactional
 public class RecipeService {
@@ -118,6 +119,19 @@ public class RecipeService {
     public RecipeDTO getSimpleRecipe(BigInteger recipeId) {
         Recipe recipe = entityManager.find(Recipe.class, recipeId);
         return recipeEntityTransformer.createSimpleRecipeDTO(recipe);
+    }
+
+    /**
+     * Returns multiple simplified recipes
+     *
+     * @param recipeIds list of ids to get
+     * @return return multiple simplified recipes
+     */
+    public List<RecipeDTO> getMultiplesimple(List<BigInteger> recipeIds) {
+        var recipesQuery = entityManager.createNamedQuery(Recipe.GET_MULTIPLE_RECIPCE, Recipe.class);
+        recipesQuery.setParameter("ids", recipeIds);
+        var recipes = recipesQuery.getResultList();
+        return recipes.stream().map(recipeEntityTransformer::createSimpleRecipeDTO).collect(Collectors.toList());
     }
 
 }
