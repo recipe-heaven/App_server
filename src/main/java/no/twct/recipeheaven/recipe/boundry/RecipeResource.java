@@ -36,7 +36,7 @@ public class RecipeResource {
      * @return returns success/fail response
      */
     @GET
-    @Path("{id}")
+    @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipe(@PathParam("id") BigInteger recipeId) {
         var full = recipeService.getRecipe(recipeId);
