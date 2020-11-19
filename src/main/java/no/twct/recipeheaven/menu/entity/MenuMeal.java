@@ -13,13 +13,14 @@ import java.math.BigInteger;
 @Table(name = "menu_meals")
 public class MenuMeal {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private int day;
 
     @OneToOne
     private Meal meal;
 
-    private int day;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
+
 
 }

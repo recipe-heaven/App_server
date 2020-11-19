@@ -1,6 +1,7 @@
 package no.twct.recipeheaven.menu.control;
 
 import no.twct.recipeheaven.menu.entity.Menu;
+import no.twct.recipeheaven.menu.entity.MenuSimpleDTO;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -23,7 +24,7 @@ public class MenuService {
     AuthenticationService authenticationService;
 
     @Inject
-    MenuEntityTransformer mealEntityTransformer;
+    MenuEntityTransformer menuEntityTransformer;
 
     /**
      * Creates a new menu for the logged in user.
@@ -35,13 +36,27 @@ public class MenuService {
         entityManager.persist(menu);
     }
 
+
+    /**
+     * Updates a menu in the database with the provided menu.
+     *
+     * @param menu the menu to create
+     */
+    public void updateMenu(Menu menu) {
+//        entityManager.merge(menu);
+    }
+
     /**
      * Returns a simple menu projection
      *
      * @param id id of the menu to get
      */
-    public void getSimpleMenuDTO(BigInteger id) {
-        // TODO
+    public MenuSimpleDTO getSimpleMenuDTO(BigInteger id) {
+        var menu = entityManager.find(Menu.class, id);
+        if (menu != null) {
+            return menuEntityTransformer.createSimpleMenuDTO(menu);
+        }
+        return null;
     }
 
     /**
