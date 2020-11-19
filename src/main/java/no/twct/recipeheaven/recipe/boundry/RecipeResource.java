@@ -3,6 +3,7 @@ package no.twct.recipeheaven.recipe.boundry;
 
 import no.twct.recipeheaven.recipe.control.RecipeService;
 import no.twct.recipeheaven.recipe.entity.Recipe;
+import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.user.entity.Group;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -12,11 +13,12 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Path("recipe")
@@ -33,14 +35,49 @@ public class RecipeResource {
      *
      * @return returns success/fail response
      */
-    @POST
-    @Path("get")
+    @GET
+    @Path("{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response getRecipe(int recipeId) {
-        recipeService.getRecipe(recipeId);
-        return Response.ok().build();
+    public Response getRecipe(@PathParam("id") BigInteger recipeId) {
+        var full = recipeService.getRecipe(recipeId);
+        return Response.ok(new DataResponse(full).getResponse()).build();
     }
 
+    /**
+     * Creates a new recipe for the logged in user.
+     * The route is protected
+     *
+     * @return returns success/fail response
+     */
+    @GET
+    @Path("simple/{id}")
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
+    public Response getRecipeSimple(@PathParam("id") BigInteger recipeId) {
+        var simple = recipeService.getSimpleRecipe(recipeId);
+        return Response.ok(new DataResponse(simple).getResponse()).build();
+    }
+
+    /**
+     * Returns a list of simple recipes from ids provided as query param ?ids=1,2,3,4
+     *
+     * @param recipeIds the id of the recipes to get as numbered strings comma separated
+     * @return returns a response with list of simple recipes or empty list or server error.
+     */
+    @GET
+    @Path("multiple/simple")
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
+    public Response getMultipleSimple(@QueryParam("ids") String recipeIds) {
+        try {
+            var              idsAsString = recipeIds.split(",");
+            List<BigInteger> idList      = new ArrayList<BigInteger>();
+            for (var id : idsAsString) {
+                idList.add(BigInteger.valueOf(Integer.parseInt(id)));
+            }
+            return Response.ok(new DataResponse(recipeService.getMultiplesimple(idList)).getResponse()).build();
+        } catch (Exception e) {
+        }
+        return Response.serverError().build();
+    }
 
     /**
      * Creates a new recipe for the logged in user.
@@ -48,7 +85,6 @@ public class RecipeResource {
      *
      * @param recipeString the json string of the recipe
      * @param photos       the image to the recipe
-     *
      * @return returns success/fail response
      */
     @POST

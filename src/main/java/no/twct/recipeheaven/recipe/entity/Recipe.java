@@ -29,7 +29,11 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "recipes")
 @EqualsAndHashCode(callSuper = true)
+@NamedQuery(name = "RecipeGetMultipleIds", query = "SELECT r FROM Recipe r WHERE r.id IN :ids")
 public class Recipe extends CreatableBase {
+
+    public static final String GET_MULTIPLE_RECIPCE = "RecipeGetMultipleIds";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
@@ -53,7 +57,7 @@ public class Recipe extends CreatableBase {
     String type = Const.RECIPE_TYPE_NAME;
 
     @Column(name = "is_public")
-    boolean visible;
+    boolean isPublic;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "recipe_id")

@@ -26,6 +26,7 @@ public class MealEntityTransformer {
     UserEntityTransformer userEntityTransformer;
 
     private void setBaseDtoValues(MealDTO dto, Meal meal) {
+        dto.setId(meal.getId());
         dto.setName(meal.getName());
         dto.setOwner(userEntityTransformer.createUserDetailsDTO(meal.getCreator()));
     }

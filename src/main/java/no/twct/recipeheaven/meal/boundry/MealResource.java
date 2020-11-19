@@ -37,6 +37,21 @@ public class MealResource {
     }
 
     /**
+     * Creates a new meal for the logged in user.
+     * The route is protected
+     *
+     * @param meal meal from request
+     * @return returns success/fail response
+     */
+    @PATCH
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
+    public Response updateMeal(Meal meal) {
+        System.out.println(meal.getName());
+        mealService.updateMeal(meal);
+        return Response.ok().build();
+    }
+
+    /**
      * Returns a simplified meal with the given id.
      *
      * @param id of the meal
