@@ -13,5 +13,5 @@ import java.util.Date;
 public class MealDTO extends OwnableEntity {
     String name;
     private Date updated;
-
+    boolean isPublic;
 }
