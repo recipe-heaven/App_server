@@ -66,7 +66,6 @@ public class MenuEntityTransformer {
         return menuRecipes.stream().map(menuRecipe -> {
             var menuRecipeDTO = new MenuRecipeDTO();
             menuRecipeDTO.setDay(menuRecipe.getDay());
-            menuRecipeDTO.setId(menuRecipe.getId());
             menuRecipeDTO.setMeal(recipeEntityTransformer.createSimpleRecipeDTO(menuRecipe.getRecipe()));
             return menuRecipeDTO;
         }).collect(Collectors.toList());
@@ -82,7 +81,6 @@ public class MenuEntityTransformer {
         return menuMeals.stream().map(menuRecipe -> {
             var menuMealDTO = new MenuMealDTO();
             menuMealDTO.setDay(menuRecipe.getDay());
-            menuMealDTO.setId(menuRecipe.getId());
             menuMealDTO.setMeal(mealEntityTransformer.createSimpleMealDTO(menuRecipe.getMeal()));
             return menuMealDTO;
         }).collect(Collectors.toList());

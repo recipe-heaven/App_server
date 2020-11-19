@@ -44,10 +44,9 @@ public class MenuResource {
     @PATCH
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response updateMenu(Menu menu) {
-        menuService.createMenu(menu);
+        menuService.updateMenu(menu);
         return Response.ok().build();
     }
-
 
     /**
      * Returns a simplified menu with the given id

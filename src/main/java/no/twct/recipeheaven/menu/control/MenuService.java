@@ -40,10 +40,16 @@ public class MenuService {
     /**
      * Updates a menu in the database with the provided menu.
      *
-     * @param menu the menu to create
+     * @param updatedMenu the updated menu
      */
-    public void updateMenu(Menu menu) {
-//        entityManager.merge(menu);
+    public void updateMenu(Menu updatedMenu) {
+        var menuFromDb = entityManager.find(Menu.class, updatedMenu.getId());
+
+        menuFromDb.setName(updatedMenu.getName());
+        menuFromDb.setMeals(updatedMenu.getMeals());
+        menuFromDb.setPublic(updatedMenu.isPublic());
+        menuFromDb.setRecipes(updatedMenu.getRecipes());
+        entityManager.persist(menuFromDb);
     }
 
     /**
