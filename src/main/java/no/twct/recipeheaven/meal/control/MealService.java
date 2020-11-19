@@ -39,6 +39,19 @@ public class MealService {
     }
 
     /**
+     * Updates a meal in the database
+     *
+     * @param updatedMeal the edited meal
+     */
+    public void updateMeal(Meal updatedMeal) {
+        var mealInDb = em.find(Meal.class, updatedMeal.getId());
+        mealInDb.setName(updatedMeal.getName());
+        mealInDb.setPublic(updatedMeal.isPublic());
+        mealInDb.setRecipes(updatedMeal.getRecipes());
+        em.merge(mealInDb);
+    }
+
+    /**
      * Gets a meal from the database by its id, and returns a simplified projection of it.
      *
      * @param id the id of the meal to find
