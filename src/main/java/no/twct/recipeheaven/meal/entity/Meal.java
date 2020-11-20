@@ -25,7 +25,10 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "meals")
 @EqualsAndHashCode(callSuper = true)
+@NamedQuery(name = Meal.GET_MULTIPLE_MEALS, query = "SELECT r FROM Meal r WHERE r.id IN :ids")
 public class Meal extends CreatableBase {
+
+    public static final String GET_MULTIPLE_MEALS = "MealGetMultipleIds";
 
     String name;
 

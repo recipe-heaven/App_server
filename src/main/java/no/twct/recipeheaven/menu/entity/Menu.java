@@ -31,12 +31,12 @@ public class Menu extends CreatableBase {
     @Column(name = "is_public")
     boolean isPublic;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "menu_recipe_link")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "menu_id", referencedColumnName = "id")
     List<MenuRecipe> recipes;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "menu_meal_link")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "menu_id", referencedColumnName = "id")
     List<MenuMeal> meals;
 
     @Temporal(TemporalType.TIMESTAMP)

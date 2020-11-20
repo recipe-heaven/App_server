@@ -86,7 +86,6 @@ public class SearchDAO {
                     " WHERE recipes.id = recipes_recipetag.recipe_id AND recipetag.id = recipes_recipetag.tags_id" +
                     " AND (recipes.name LIKE ? OR recipetag.tagname = ?)";
 
-
     /**
      * Searches recipes names and tags containing the provided search string and also is visible.
      * If no match, en empty list is returned.
@@ -142,13 +141,11 @@ public class SearchDAO {
      **************/
 
     private String menuSearchString = "SELECT name, id, array_agg(day) as days FROM (" +
-            " SELECT menus.name, menus.id, menus.creator, menus.is_public, menu_meals.day as day FROM menus, menu_meals, menu_meal_link" +
-            " WHERE (menu_meals.id = menu_meal_link.meals_id" +
-            " AND menus.id = menu_meal_link.menu_id)" +
+            " SELECT menus.name, menus.id, menus.creator, menus.is_public, menu_meals.day as day FROM menus, menu_meals" +
+            " WHERE menu_meals.id = menus.id" +
             " UNION" +
-            " SELECT menus.name, menus.id, menus.creator, menus.is_public, menu_recipes.day as day FROM menus, menu_recipes, menu_recipe_link" +
-            " WHERE (menu_recipes.id = menu_recipe_link.recipes_id" +
-            " AND menus.id = menu_recipe_link.menu_id)" +
+            " SELECT menus.name, menus.id, menus.creator, menus.is_public, menu_recipes.day as day FROM menus, menu_recipes" +
+            " WHERE (menu_recipes.id = menus.id)" +
             ") sub" +
             " WHERE name LIKE ?";
 

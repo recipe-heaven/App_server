@@ -5,6 +5,7 @@ import no.twct.recipeheaven.recipe.control.RecipeService;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.user.entity.Group;
+import no.twct.recipeheaven.util.StringParser;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -17,8 +18,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Path("recipe")
@@ -68,11 +67,7 @@ public class RecipeResource {
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMultipleSimple(@QueryParam("ids") String recipeIds) {
         try {
-            var              idsAsString = recipeIds.split(",");
-            List<BigInteger> idList      = new ArrayList<BigInteger>();
-            for (var id : idsAsString) {
-                idList.add(BigInteger.valueOf(Integer.parseInt(id)));
-            }
+            var idList = StringParser.convertCsvNumberedStringToBigInt(recipeIds);
             return Response.ok(new DataResponse(recipeService.getMultiplesimple(idList)).getResponse()).build();
         } catch (Exception e) {
         }

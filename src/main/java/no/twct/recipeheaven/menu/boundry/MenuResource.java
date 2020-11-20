@@ -28,15 +28,28 @@ public class MenuResource {
      * @return returns success/fail response
      */
     @POST
-    @Path("create")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response createMeal(Menu menu) {
+    public Response createMenu(Menu menu) {
         menuService.createMenu(menu);
         return Response.ok().build();
     }
 
     /**
-     * Returns a simplified meal with the given id
+     * Updates a menu.
+     * The route is protected
+     *
+     * @param menu menu from request
+     * @return returns success/fail response
+     */
+    @PATCH
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
+    public Response updateMenu(Menu menu) {
+        menuService.updateMenu(menu);
+        return Response.ok().build();
+    }
+
+    /**
+     * Returns a simplified menu with the given id
      *
      * @param id of the menu
      * @return returns success/fail response
@@ -45,11 +58,12 @@ public class MenuResource {
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealSimple(@PathParam("id") BigInteger id) {
-        return Response.ok(new DataResponse("TO BE IMPLEMENTED").getResponse()).build();
+        var m = menuService.getSimpleMenuDTO(id);
+        return Response.ok(new DataResponse(m).getResponse()).build();
     }
 
     /**
-     * Returns a full meal with the given id
+     * Returns a full menu with the given id
      *
      * @param id of the menu
      * @return returns success/fail response
