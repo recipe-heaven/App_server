@@ -3,12 +3,14 @@ package no.twct.recipeheaven.recipe.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.resources.entity.Image;
 import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -38,23 +40,29 @@ public class Recipe extends CreatableBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
+    @NotNull
     @ManyToOne
     User creator;
 
+    @NotEmpty
     String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     List<RecipeTag> tags;
 
+    @NotEmpty
     String description;
 
     @Column(name = "cook_time")
+    @Min(0)
     int cookTime = 0;
 
+    @NotNull
     @OneToOne
     Image recipeImage;
 
-    String type = Const.RECIPE_TYPE_NAME;
+    @NotEmpty
+    String type;
 
     @Column(name = "is_public")
     boolean isPublic;
@@ -63,6 +71,7 @@ public class Recipe extends CreatableBase {
     @JoinColumn(name = "recipe_id")
     List<RecipeIngredient> recipeIngredients;
 
+    @NotEmpty
     @Column(name = "cooking_steps")
     String cookingSteps;
 

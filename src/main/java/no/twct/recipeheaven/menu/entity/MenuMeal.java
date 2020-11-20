@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.meal.entity.Meal;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
 @Data
@@ -13,8 +15,10 @@ import java.math.BigInteger;
 @Table(name = "menu_meals")
 public class MenuMeal {
 
+    @Min(0)
     private int day;
 
+    @NotNull
     @OneToOne
     private Meal meal;
 

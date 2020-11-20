@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.CreatableBase;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Menu extends CreatableBase {
 
+    @NotEmpty
     String name;
 
     @Column(name = "is_public")
@@ -33,11 +36,11 @@ public class Menu extends CreatableBase {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    List<MenuRecipe> recipes;
+    List<@Valid MenuRecipe> recipes;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    List<MenuMeal> meals;
+    List<@Valid MenuMeal> meals;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
