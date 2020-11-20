@@ -66,7 +66,7 @@ public class MenuEntityTransformer {
         return menuRecipes.stream().map(menuRecipe -> {
             var menuRecipeDTO = new MenuRecipeDTO();
             menuRecipeDTO.setDay(menuRecipe.getDay());
-            menuRecipeDTO.setMeal(recipeEntityTransformer.createSimpleRecipeDTO(menuRecipe.getRecipe()));
+            menuRecipeDTO.setRecipe(recipeEntityTransformer.createSimpleRecipeDTO(menuRecipe.getRecipe()));
             return menuRecipeDTO;
         }).collect(Collectors.toList());
     }

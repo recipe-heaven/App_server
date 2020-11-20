@@ -14,6 +14,6 @@ public class MenuRecipeDTO {
 
     private BigInteger id;
 
-    private RecipeDTO meal;
+    private RecipeDTO recipe;
 
 }
