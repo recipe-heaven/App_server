@@ -25,6 +25,7 @@ public class StringParser {
             }
             return bigIntList;
         } catch (NumberFormatException e) {
+            bigIntList = new ArrayList<BigInteger>();
         }
         return bigIntList;
     }
