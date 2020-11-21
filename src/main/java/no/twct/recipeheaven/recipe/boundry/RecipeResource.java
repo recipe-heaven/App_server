@@ -1,12 +1,13 @@
 package no.twct.recipeheaven.recipe.boundry;
 
 
-import no.twct.recipeheaven.meal.entity.FullMealDTO;
 import no.twct.recipeheaven.recipe.control.RecipeService;
 import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.recipe.entity.RecipeDTO;
 import no.twct.recipeheaven.response.DataResponse;
+import no.twct.recipeheaven.response.ErrorResponse;
+import no.twct.recipeheaven.response.errors.ViolationErrorMessageBuilder;
 import no.twct.recipeheaven.user.entity.Group;
 import no.twct.recipeheaven.util.StringParser;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -17,6 +18,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,9 +44,9 @@ public class RecipeResource {
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipe(@PathParam("id") BigInteger id) {
         FullRecipeDTO recipeDTO = recipeService.getRecipe(id);
-        if (recipeDTO != null){
+        if (recipeDTO != null) {
             return Response.ok(new DataResponse(recipeDTO).getResponse()).build();
-        }else {
+        } else {
             return Response.noContent().build();
         }
 
@@ -61,9 +63,9 @@ public class RecipeResource {
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipeSimple(@PathParam("id") BigInteger id) {
         RecipeDTO recipeDTO = recipeService.getSimpleRecipe(id);
-        if (recipeDTO != null){
+        if (recipeDTO != null) {
             return Response.ok(new DataResponse(recipeDTO).getResponse()).build();
-        }else {
+        } else {
             return Response.noContent().build();
         }
     }
@@ -103,16 +105,19 @@ public class RecipeResource {
             FormDataMultiPart photos
 
     ) {
-
-        // maby inject somhow so not create on every run
-        Jsonb jsonb = JsonbBuilder.create();
-
-        Recipe recipe = jsonb.fromJson(recipeString, Recipe.class);
-        recipeService.createRecipe(recipe, photos);
-
-        return Response.ok().build();
-
-
+        Response.ResponseBuilder response;
+        try {
+            Jsonb  jsonb  = JsonbBuilder.create();
+            Recipe recipe = jsonb.fromJson(recipeString, Recipe.class);
+            recipeService.createRecipe(recipe, photos);
+            response = Response.ok(new DataResponse().getResponse());
+        } catch (ConstraintViolationException e) {
+            var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
+            response = Response.ok(new ErrorResponse(violations).getResponse());
+        } catch (Exception e) {
+            response = Response.serverError();
+        }
+        return response.build();
     }
 
 
