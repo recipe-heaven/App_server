@@ -5,14 +5,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.resources.entity.Image;
-import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.math.BigInteger;
-import java.util.Date;
 import java.util.List;
 
 
@@ -31,7 +29,7 @@ public class Recipe extends CreatableBase {
     String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    List<RecipeTag> tags;
+    List<@Valid RecipeTag> tags;
 
     @NotEmpty
     String description;
@@ -46,9 +44,6 @@ public class Recipe extends CreatableBase {
 
     @NotEmpty
     String type;
-
-    @Column(name = "is_public")
-    boolean isPublic;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "recipe_id")
