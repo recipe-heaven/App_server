@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
 import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.menu.entity.ValidMenuItem;
 import no.twct.recipeheaven.resources.entity.Image;
 import no.twct.recipeheaven.user.entity.User;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @Table(name = "recipes")
 @EqualsAndHashCode(callSuper = true)
 @NamedQuery(name = Recipe.GET_MULTIPLE_RECIPCE, query = "SELECT r FROM Recipe r WHERE r.id IN :ids")
-public class Recipe extends CreatableBase {
+public class Recipe extends ValidMenuItem {
 
     public static final String GET_MULTIPLE_RECIPCE = "RecipeGetMultipleIds";
 

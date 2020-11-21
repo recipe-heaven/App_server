@@ -69,7 +69,8 @@ public class MenuService {
      *
      * @param id id of the menu to get
      */
-    public void getFullMenuDTO(BigInteger id) {
+    public Menu getFullMenuDTO(BigInteger id) {
+        return entityManager.find(Menu.class, id);
         // TODO
     }
 

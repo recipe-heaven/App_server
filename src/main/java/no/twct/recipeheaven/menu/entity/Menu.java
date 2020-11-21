@@ -4,7 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.meal.entity.Meal;
+import no.twct.recipeheaven.recipe.entity.Recipe;
 
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Table(name = "menus")
 @EqualsAndHashCode(callSuper = true)
+@NamedQuery(name = "Menu.getItemType", query = "select c.dtype from CreatableBase c")
 public class Menu extends CreatableBase {
 
     String name;
@@ -28,16 +33,16 @@ public class Menu extends CreatableBase {
 
     public List<MenuRecipe> getRecipes() {
         return menuItems.stream()
-                        .filter(menuItem -> menuItem.getItemType().equals(MenuItem.ItemTypes.recipe))
-                        .map(menuItem -> (MenuRecipe) menuItem)
+                        .filter(menuItem -> menuItem.getMenuDayItem() instanceof Recipe)
+                        .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem()))
                         .collect(
                                 Collectors.toList());
     }
 
     public List<MenuMeal> getMeals() {
         return menuItems.stream()
-                        .filter(menuItem -> menuItem.getItemType().equals(MenuItem.ItemTypes.meal))
-                        .map(menuItem -> (MenuMeal) menuItem)
+                        .filter(menuItem -> menuItem.getMenuDayItem() instanceof Meal)
+                        .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem()))
                         .collect(
                                 Collectors.toList());
     }
