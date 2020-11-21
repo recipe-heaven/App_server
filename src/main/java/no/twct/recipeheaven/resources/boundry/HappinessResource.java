@@ -30,7 +30,7 @@ public class HappinessResource {
     @POST
     @Path("star/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response getRecipe(@PathParam("id") BigInteger id) {
+    public Response starItem(@PathParam("id") BigInteger id) {
         if (happinessService.starUserItem(id)){
             return Response.ok().build();
         }else {
