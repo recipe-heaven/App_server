@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.menu.entity.Menu;
-import no.twct.recipeheaven.resources.control.UserStatusStarsAdapter;
 import no.twct.recipeheaven.user.entity.User;
 
 import javax.json.bind.annotation.JsonbTypeAdapter;
@@ -34,7 +33,6 @@ public class UserStatus implements Serializable {
     private User owner;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JsonbTypeAdapter(UserStatusStarsAdapter.class)
     private List<CreatableBase> staredEntities;
 
     public UserStatus(User owner) {

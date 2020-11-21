@@ -44,4 +44,10 @@ public class SearchOptions {
      */
     boolean includeRecipes;
 
+
+    /**
+     * Stared only
+     */
+    boolean staredOnly;
+
 }
