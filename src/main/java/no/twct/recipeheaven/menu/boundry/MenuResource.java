@@ -72,6 +72,7 @@ public class MenuResource {
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealFull(@PathParam("id") BigInteger id) {
-        return Response.ok(new DataResponse("TO BE IMPLEMENTED").getResponse()).build();
+        var m = menuService.getFullMenuDTO(id);
+        return Response.ok(new DataResponse(m).getResponse()).build();
     }
 }
