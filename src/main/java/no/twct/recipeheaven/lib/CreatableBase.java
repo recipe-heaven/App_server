@@ -14,9 +14,8 @@ import java.util.Date;
  * and and ID which are linked (one to one).
  */
 @Data
-@NoArgsConstructor
-//@MappedSuperclass
 @Entity
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class CreatableBase {
 

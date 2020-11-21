@@ -1,57 +1,43 @@
 package no.twct.recipeheaven.search.entity;
 
 
-import no.twct.recipeheaven.recipe.entity.Recipe;
-
-import javax.naming.directory.SearchResult;
 import javax.persistence.EntityManager;
-import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.List;
 
 /**
- * Proves database access functions for search where
- * a regular entity object can not be used.
+ * Provides methods to perform specific searches in the data base for
+ * entities.
  */
-
-
 public class SearchDAO {
 
     @PersistenceContext
     EntityManager em;
 
     //    private static final String restrctView = " not (item.isPublic = false and item.creator.id <> :id) ";
-    private static final String restrctView = " item.id not in (select ba.id from CreatableBase as ba where ba.isPublic = false and item.creator.id <> :id) ";
+    private static final String restrictView = " item.id not in (select ba.id from CreatableBase as ba where ba.isPublic = false and item.creator.id <> :id) ";
 
-    private static final String baseRecipeQuery = "SELECT new no.twct.recipeheaven.search.entity.RecipeSearchResult( item) from Recipe AS item where " + restrctView;
-    private static final String baseMenuQuery   = "SELECT new no.twct.recipeheaven.search.entity.MenuSearchResult( item) from Menu AS item where " + restrctView;
-    private static final String baseMealQuery   = "SELECT new no.twct.recipeheaven.search.entity.MealSearchResult( item) from Meal AS item where " + restrctView;
+    private static final String baseRecipeQuery = "SELECT new no.twct.recipeheaven.search.entity.RecipeSearchResult( item) from Recipe AS item where " + restrictView;
+    private static final String baseMenuQuery = "SELECT new no.twct.recipeheaven.search.entity.MenuSearchResult( item) from Menu AS item where " + restrictView;
+    private static final String baseMealQuery = "SELECT new no.twct.recipeheaven.search.entity.MealSearchResult( item) from Meal AS item where " + restrictView;
 
     private static final String queryUserIdFilter = " AND item.creator.id = :id";
-    private static final String queryNameFilter   = " AND item.name LIKE :name_q";
+    private static final String queryNameFilter = " AND item.name LIKE :name_q";
     private static final String queryInUserStarFilter = " AND  item.id in (select e.id from UserStatus u JOIN  u.staredEntities e where u.id = :id) ";
     //    private static final String queryInUserStarFilter = "AND  item.id in (select st.id from (select u.staredEntities from UserStatus as u where u.id = :id) as st) ";
 
-    private static final String queryRecipeTypeFilter     = " AND item.type LIKE :type_q";
+    private static final String queryRecipeTypeFilter = " AND item.type LIKE :type_q";
     private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where rp.name LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where r_tag.tagName = :name_q))  ";
-
-
 
 
     /**************
      * RECIPES
      **************/
-
-
-
-    public List<RecipeSearchResult> searchRecipesByStared(String searchString, String recipeType, BigInteger userId) {
-        String queryString = baseRecipeQuery  + queryInUserStarFilter;
-       //em.createQuery("SELECT new no.twct.recipeheaven.search.entity.RecipeSearchResult( item) from Recipe AS item where  item.id not in (select ba.id from CreatableBase as ba where ba.isPublic = false and item.creator.id <> :id) AND  item.id in (select u.id from UserStatus u JOIN  u.staredEntities where u.id = :id) ");
-        Query q =  em.createQuery( queryString);
-        //q.setParameter("name_q", "%" + searchString + "%");
-        //q.setParameter("type_q", "%" + recipeType + "%");
+    public List<RecipeSearchResult> searchRecipesByStared(BigInteger userId) {
+        String queryString = baseRecipeQuery + queryInUserStarFilter;
+        Query  q           = em.createQuery(queryString);
         q.setParameter("id", userId);
         return q.getResultList();
     }
@@ -65,9 +51,9 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
     public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString, String recipeType, BigInteger userId) {
-        String queryString = baseRecipeQuery  + queryNameAndTagTypeFilter + queryRecipeTypeFilter;
+        String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryRecipeTypeFilter;
 
-        Query q =  em.createQuery( queryString);
+        Query q = em.createQuery(queryString);
         q.setParameter("name_q", "%" + searchString + "%");
         q.setParameter("type_q", "%" + recipeType + "%");
         q.setParameter("id", userId);
@@ -85,9 +71,9 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
     public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, String recipeType, BigInteger userId) {
-        String queryString = baseRecipeQuery  +  queryNameAndTagTypeFilter + queryUserIdFilter;
+        String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryUserIdFilter;
 
-        Query q =  em.createQuery( queryString);
+        Query q = em.createQuery(queryString);
         q.setParameter("name_q", "%" + searchString + "%");
         q.setParameter("id", userId);
         return q.getResultList();
@@ -108,7 +94,7 @@ public class SearchDAO {
     public List<MealSearchResult> searchMealsByName(String searchString, BigInteger userId) {
         String queryString = baseMealQuery + queryNameFilter;
 
-        Query q =  em.createQuery( queryString);
+        Query q = em.createQuery(queryString);
         q.setParameter("name_q", "%" + searchString + "%");
         q.setParameter("id", userId);
         return q.getResultList();
@@ -124,7 +110,7 @@ public class SearchDAO {
     public List<MealSearchResult> searchMealsByNameOwnerOnly(String searchString, BigInteger userId) {
         String queryString = baseMealQuery + queryNameFilter + queryUserIdFilter;
 
-        Query q =  em.createQuery( queryString);
+        Query q = em.createQuery(queryString);
         q.setParameter("name_q", "%" + searchString + "%");
         q.setParameter("id", userId);
         return q.getResultList();
@@ -143,9 +129,9 @@ public class SearchDAO {
      * @return returns search result
      */
     public List<MenuSearchResult> searchMenusByName(String searchString, BigInteger userId) {
-        String queryString = baseMenuQuery +  queryNameFilter;
+        String queryString = baseMenuQuery + queryNameFilter;
 
-        Query q =  em.createQuery( queryString);
+        Query q = em.createQuery(queryString);
         q.setParameter("name_q", "%" + searchString + "%");
         q.setParameter("id", userId);
         return q.getResultList();
@@ -159,9 +145,9 @@ public class SearchDAO {
      * @return returns search result
      */
     public List<MenuSearchResult> searchMenusByNameOwnerOnly(String searchString, BigInteger userId) {
-        String queryString = baseMenuQuery +  queryNameFilter + queryUserIdFilter;
+        String queryString = baseMenuQuery + queryNameFilter + queryUserIdFilter;
 
-        Query q =  em.createQuery( queryString);
+        Query q = em.createQuery(queryString);
         q.setParameter("name_q", "%" + searchString + "%");
         q.setParameter("id", userId);
         return q.getResultList();
