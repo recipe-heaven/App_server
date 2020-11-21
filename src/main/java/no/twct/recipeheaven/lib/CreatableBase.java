@@ -6,6 +6,7 @@ import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * Base entity class for
@@ -14,14 +15,26 @@ import java.math.BigInteger;
  */
 @Data
 @NoArgsConstructor
-@MappedSuperclass
+//@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class CreatableBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
+    @Column(name = "is_public")
+    boolean isPublic;
+
+
     @OneToOne
     @JoinColumn(name = "creator", referencedColumnName = "id", nullable = false)
     User creator;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updated;
 }
