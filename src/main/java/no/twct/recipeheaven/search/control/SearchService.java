@@ -1,5 +1,6 @@
 package no.twct.recipeheaven.search.control;
 
+import no.twct.recipeheaven.search.entity.Result;
 import no.twct.recipeheaven.search.entity.ResultItem;
 import no.twct.recipeheaven.search.entity.SearchDAO;
 import no.twct.recipeheaven.search.entity.SearchResultContainer;
@@ -50,14 +51,23 @@ public class SearchService {
 
         SearchResultContainer resultContainer = new SearchResultContainer();
         List<ResultItem>      results;
+
+        if(options.staredOnly){
+            resultContainer.setResult(getStaredRecipes(options, user));
+            return resultContainer;
+        }
+
         if (options.ownedOnly) {
             results = searchOwnedOnly(options, user);
         } else {
-            results = search(options);
+            // todo: this may need to be fixed but it seems a non loged in user arent alowed to search anywhay
+            results = search(options, user);
         }
         resultContainer.setResult(results);
         return resultContainer;
     }
+
+
 
     /**
      * Searches only a users owned recipes, meals, and menus.
@@ -77,7 +87,7 @@ public class SearchService {
             searchDAO.searchMenusByNameOwnerOnly(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
         }
         if (options.includeRecipes) {
-            searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, options.recipeType, user.getId().intValue()).forEach(recipe -> {
+            searchDAO.searchRecipesByNameAndTagsOwnerOnly(options.searchString, options.recipeType, user.getId()).forEach(recipe -> {
                 results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
             });
         }
@@ -92,21 +102,28 @@ public class SearchService {
      * @param options search options
      * @return returns a list of the result, or empty list
      */
-    List<ResultItem> search(SearchOptions options) {
+    List<ResultItem> search(SearchOptions options, User user) {
         List<ResultItem> results = new ArrayList<ResultItem>();
         if (options.includeMeals) {
-            searchDAO.searchMealsByName(options.searchString).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
+            searchDAO.searchMealsByName(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MEAL_TYPE_NAME, meal)));
         }
         if (options.includeMenus) {
-            searchDAO.searchMenusByName(options.searchString).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
+            searchDAO.searchMenusByName(options.searchString, user.getId()).forEach(meal -> results.add(new ResultItem(MENU_TYPE_NAME, meal)));
         }
         if (options.includeRecipes) {
-            searchDAO.searchRecipesByNameAndTags(options.searchString, options.recipeType).forEach(recipe -> {
+            searchDAO.searchRecipesByNameAndTags(options.searchString, options.recipeType, user.getId()).forEach(recipe -> {
                 results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
             });
         }
         return results;
     }
 
+    List<ResultItem> getStaredRecipes(SearchOptions options, User user) {
+        List<ResultItem> results = new ArrayList<ResultItem>();
+            searchDAO.searchRecipesByStared(options.searchString, options.recipeType, user.getId()).forEach(recipe -> {
+                results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
+            });
+        return results;
+    }
 
 }
