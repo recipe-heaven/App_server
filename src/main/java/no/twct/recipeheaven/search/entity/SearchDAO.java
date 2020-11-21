@@ -8,101 +8,58 @@ import java.math.BigInteger;
 import java.util.List;
 
 /**
- * Proves database access functions for search where
- * a regular entity object can not be used.
+ * Provides methods to perform specific searches in the data base for
+ * entities.
  */
-
 public class SearchDAO {
 
     @PersistenceContext
     EntityManager em;
 
-    /**************
-     * MEALS
-     **************/
+    //    private static final String restrctView = " not (item.isPublic = false and item.creator.id <> :id) ";
+    private static final String restrictView = " item.id not in (select ba.id from CreatableBase as ba where ba.isPublic = false and item.creator.id <> :id) ";
 
-    private final String mealSearchQueryString =
-            "SELECT name, id, array_agg(type) as type" +
-                    " FROM (" +
-                    " SELECT meals.name, meals.id, recipes.type as type" +
-                    " FROM meals," +
-                    " recipes," +
-                    " meal_recipes" +
-                    " WHERE meals.id = meal_recipes.meal_id" +
-                    " AND recipes.id = meal_recipes.recipes_id" +
-                    " AND meals.name LIKE ?";
+    private static final String baseRecipeQuery = "SELECT new no.twct.recipeheaven.search.entity.RecipeSearchResult( item) from Recipe AS item where " + restrictView;
+    private static final String baseMenuQuery = "SELECT new no.twct.recipeheaven.search.entity.MenuSearchResult( item) from Menu AS item where " + restrictView;
+    private static final String baseMealQuery = "SELECT new no.twct.recipeheaven.search.entity.MealSearchResult( item) from Meal AS item where " + restrictView;
 
-    /**
-     * Search for meals by its name and return the result.
-     *
-     * @param searchString the string to search for
-     * @return returns search result
-     */
-    public List<MealSearchResult> searchMealsByName(String searchString) {
-        String queryString = mealSearchQueryString;
-        queryString += " AND meals.is_public = ?";
-        queryString += ") sub GROUP BY name, id;";
+    private static final String queryUserIdFilter = " AND item.creator.id = :id";
+    private static final String queryNameFilter = " AND item.name LIKE :name_q";
+    private static final String queryInUserStarFilter = " AND  item.id in (select e.id from UserStatus u JOIN  u.staredEntities e where u.id = :id) ";
+    //    private static final String queryInUserStarFilter = "AND  item.id in (select st.id from (select u.staredEntities from UserStatus as u where u.id = :id) as st) ";
 
-        Query query = em.createNativeQuery(queryString, "MealSearchResult");
-        query.setParameter(2, true);
-        return this.searchMeals(query, searchString);
-    }
+    private static final String queryRecipeTypeFilter = " AND item.type LIKE :type_q";
+    private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where rp.name LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where r_tag.tagName = :name_q))  ";
 
-    /**
-     * Search for meals by its name and the owner of the meal and return the result.
-     *
-     * @param searchString the string to search for
-     * @param userId       the owner of the meals
-     * @return returns search result
-     */
-    public List<MealSearchResult> searchMealsByNameOwnerOnly(String searchString, BigInteger userId) {
-        String queryString = mealSearchQueryString;
-        queryString += " AND meals.creator = ?";
-        queryString += " ) sub GROUP BY name, id;";
-        Query query = em.createNativeQuery(queryString, "MealSearchResult");
-
-        query.setParameter(2, userId);
-        return this.searchMeals(query, searchString);
-    }
-
-    /**
-     * Injects the search string and execute the search and returns the result
-     *
-     * @param query        the query to execute
-     * @param searchString the string to search for
-     * @return returns the search result
-     */
-    private List<MealSearchResult> searchMeals(Query query, String searchString) {
-        query.setParameter(1, "%" + searchString + "%");
-        return query.getResultList();
-    }
 
     /**************
      * RECIPES
      **************/
-
-    private final String recipeSearchQueryString =
-            "SELECT DISTINCT recipes.id, recipes.name, recipes.cook_time, recipes.type FROM recipes, recipetag, recipes_recipetag" +
-                    " WHERE recipes.id = recipes_recipetag.recipe_id AND recipetag.id = recipes_recipetag.tags_id" +
-                    " AND (recipes.name LIKE ? OR recipetag.tagname = ?)";
+    public List<RecipeSearchResult> searchRecipesByStared(BigInteger userId) {
+        String queryString = baseRecipeQuery + queryInUserStarFilter;
+        Query  q           = em.createQuery(queryString);
+        q.setParameter("id", userId);
+        return q.getResultList();
+    }
 
     /**
      * Searches recipes names and tags containing the provided search string and also is visible.
      * If no match, en empty list is returned.
      *
      * @param searchString the string to search for.
+     * @param userId       query user
      * @return list of recipe results or empty list
      */
+    public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString, String recipeType, BigInteger userId) {
+        String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryRecipeTypeFilter;
 
-    public List<RecipeSearchResult> searchRecipesByNameAndTags(String searchString, String recipeType) {
-        String queryString = recipeSearchQueryString + " AND recipes.is_public = true";
-        if (!recipeType.isBlank()) {
-            queryString += " AND recipes.type = ?";
-        }
-        Query query = em.createNativeQuery(queryString, "ScheduleResult");
-        if (!recipeType.isBlank()) query.setParameter(3, recipeType);
-        return this.searchRecipes(query, searchString);
+        Query q = em.createQuery(queryString);
+        q.setParameter("name_q", "%" + searchString + "%");
+        q.setParameter("type_q", "%" + recipeType + "%");
+        q.setParameter("id", userId);
+        return q.getResultList();
     }
+
 
     /**
      * Searches recipes names and tags containing the provided search string owned by the user with the provided id.
@@ -110,87 +67,91 @@ public class SearchDAO {
      * If no match, en empty list is returned.
      *
      * @param searchString the string to search for.
+     * @param userId       query user
      * @return list of recipe results or empty list
      */
-    public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, String recipeType, int userId) {
-        String queryString = recipeSearchQueryString + " AND recipes.creator_id = ?";
-        if (!recipeType.isBlank()) {
-            queryString += " AND recipes.type = ?";
-        }
-        Query query = em.createNativeQuery(queryString, "ScheduleResult");
-        if (!recipeType.isBlank()) query.setParameter(4, recipeType);
-        query.setParameter(3, userId);
-        return this.searchRecipes(query, searchString);
+    public List<RecipeSearchResult> searchRecipesByNameAndTagsOwnerOnly(String searchString, String recipeType, BigInteger userId) {
+        String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryUserIdFilter;
+
+        Query q = em.createQuery(queryString);
+        q.setParameter("name_q", "%" + searchString + "%");
+        q.setParameter("id", userId);
+        return q.getResultList();
+    }
+
+    /**************
+     * MEALS
+     **************/
+
+
+    /**
+     * Search for meals by its name and return the result.
+     *
+     * @param searchString the string to search for
+     * @param userId       query user
+     * @return returns search result
+     */
+    public List<MealSearchResult> searchMealsByName(String searchString, BigInteger userId) {
+        String queryString = baseMealQuery + queryNameFilter;
+
+        Query q = em.createQuery(queryString);
+        q.setParameter("name_q", "%" + searchString + "%");
+        q.setParameter("id", userId);
+        return q.getResultList();
     }
 
     /**
-     * Injects the search string for tags, and recipe names and execute the search and returns the result
+     * Search for meals by its name and the owner of the meal and return the result.
      *
-     * @param query        the query to execute
      * @param searchString the string to search for
-     * @return returns the search result
+     * @param userId       query user
+     * @return returns search result
      */
-    private List<RecipeSearchResult> searchRecipes(Query query, String searchString) {
-        query.setParameter(1, "%" + searchString + "%");
-        query.setParameter(2, searchString);
-        return query.getResultList();
+    public List<MealSearchResult> searchMealsByNameOwnerOnly(String searchString, BigInteger userId) {
+        String queryString = baseMealQuery + queryNameFilter + queryUserIdFilter;
+
+        Query q = em.createQuery(queryString);
+        q.setParameter("name_q", "%" + searchString + "%");
+        q.setParameter("id", userId);
+        return q.getResultList();
     }
+
 
     /**************
      * MENUS
      **************/
 
-    private String menuSearchString = "SELECT name, id, array_agg(day) as days FROM (" +
-            " SELECT menus.name, menus.id, menus.creator, menus.is_public, menu_meals.day as day FROM menus, menu_meals" +
-            " WHERE menu_meals.id = menus.id" +
-            " UNION" +
-            " SELECT menus.name, menus.id, menus.creator, menus.is_public, menu_recipes.day as day FROM menus, menu_recipes" +
-            " WHERE (menu_recipes.id = menus.id)" +
-            ") sub" +
-            " WHERE name LIKE ?";
-
-
     /**
      * Search for menus by its name and return the result.
      *
      * @param searchString the string to search for
+     * @param userId       query user
      * @return returns search result
      */
-    public List<MenuSearchResult> searchMenusByName(String searchString) {
-        String queryString = menuSearchString;
-        queryString += " AND sub.is_public = ?";
-        queryString += " group by name, id;";
-        Query query = em.createNativeQuery(queryString, "MenuSearchResult");
-        query.setParameter(2, true);
-        return this.searchMenus(query, searchString);
+    public List<MenuSearchResult> searchMenusByName(String searchString, BigInteger userId) {
+        String queryString = baseMenuQuery + queryNameFilter;
+
+        Query q = em.createQuery(queryString);
+        q.setParameter("name_q", "%" + searchString + "%");
+        q.setParameter("id", userId);
+        return q.getResultList();
     }
 
     /**
      * Search for menus by its name and the owner of the menu and return the result.
      *
      * @param searchString the string to search for
-     * @param userId       the owner of the menus
+     * @param userId       query user
      * @return returns search result
      */
     public List<MenuSearchResult> searchMenusByNameOwnerOnly(String searchString, BigInteger userId) {
-        String queryString = menuSearchString;
-        queryString += " AND sub.creator = ?";
-        queryString += " group by name, id;";
-        Query query = em.createNativeQuery(queryString, "MenuSearchResult");
-        query.setParameter(2, userId);
-        return this.searchMenus(query, searchString);
+        String queryString = baseMenuQuery + queryNameFilter + queryUserIdFilter;
+
+        Query q = em.createQuery(queryString);
+        q.setParameter("name_q", "%" + searchString + "%");
+        q.setParameter("id", userId);
+        return q.getResultList();
     }
 
-    /**
-     * Injects the search string and execute the search and returns the result
-     *
-     * @param query        the query to execute
-     * @param searchString the string to search for
-     * @return returns the search result
-     */
-    private List<MenuSearchResult> searchMenus(Query query, String searchString) {
-        query.setParameter(1, "%" + searchString + "%");
-        return query.getResultList();
-    }
 
 }

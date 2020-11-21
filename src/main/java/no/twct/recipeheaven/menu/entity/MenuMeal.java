@@ -11,16 +11,12 @@ import java.math.BigInteger;
 @Entity
 @NoArgsConstructor
 @Table(name = "menu_meals")
-public class MenuMeal {
-
-    private int day;
-
+public class MenuMeal extends MenuItem {
     @OneToOne
     private Meal meal;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
-
-
+    @Override
+    public ItemTypes getItemType() {
+        return ItemTypes.meal;
+    }
 }

@@ -39,6 +39,7 @@ public class MealEntityTransformer {
      * @return returns the minified projection
      */
     public SimpleMealDTO createSimpleMealDTO(Meal meal) {
+        if(meal == null) return null;
         SimpleMealDTO mealSimpleDetailsDTO = new SimpleMealDTO();
         setBaseDtoValues(mealSimpleDetailsDTO, meal);
         List<RecipeDTO> recipes = meal.getRecipes().stream()
@@ -55,6 +56,7 @@ public class MealEntityTransformer {
      * @return returns the full projection
      */
     public FullMealDTO createFullMealDTO(Meal meal) {
+        if(meal == null) return null;
         FullMealDTO mealSimpleDetailsDTO = new FullMealDTO();
         setBaseDtoValues(mealSimpleDetailsDTO, meal);
         List<FullRecipeDTO> recipes = meal.getRecipes().stream()

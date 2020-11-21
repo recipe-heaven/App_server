@@ -36,6 +36,7 @@ public class RecipeEntityTransformer {
      * @return recipe DTO with minified details
      */
     public RecipeDTO createSimpleRecipeDTO(Recipe recipe) {
+        if(recipe == null) return null;
         RecipeDTO simpleRecipeDTO = new RecipeDTO();
         setBaseDtoValues(simpleRecipeDTO, recipe);
         return simpleRecipeDTO;
@@ -48,6 +49,7 @@ public class RecipeEntityTransformer {
      * @return recipe DTO with all details
      */
     public FullRecipeDTO createFullRecipeDTO(Recipe recipe) {
+        if(recipe == null) return null;
         FullRecipeDTO fullRecipeDTP = new FullRecipeDTO();
         setBaseDtoValues(fullRecipeDTP, recipe);
         fullRecipeDTP.setTags(recipe.getTags());

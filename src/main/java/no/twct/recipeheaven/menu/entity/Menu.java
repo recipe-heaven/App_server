@@ -7,18 +7,11 @@ import no.twct.recipeheaven.lib.CreatableBase;
 
 import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@SqlResultSetMapping(
-        name = "MenuSearchResult",
-        classes = {
-                @ConstructorResult(
-                        targetClass = no.twct.recipeheaven.search.entity.MenuSearchResult.class,
-                        columns = {
-                                @ColumnResult(name = "id", type = BigInteger.class),
-                                @ColumnResult(name = "name", type = String.class),
-                                @ColumnResult(name = "days", type = Integer[].class)})})
 @Data
 @Entity
 @NoArgsConstructor
@@ -28,20 +21,25 @@ public class Menu extends CreatableBase {
 
     String name;
 
-    @Column(name = "is_public")
-    boolean isPublic;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    List<MenuRecipe> recipes;
+    List<MenuItem> menuItems;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "menu_id", referencedColumnName = "id")
-    List<MenuMeal> meals;
+    // i am tiered this is temporary
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    public List<MenuRecipe> getRecipes() {
+        return menuItems.stream()
+                        .filter(menuItem -> menuItem.getItemType().equals(MenuItem.ItemTypes.recipe))
+                        .map(menuItem -> (MenuRecipe) menuItem)
+                        .collect(
+                                Collectors.toList());
+    }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated;
+    public List<MenuMeal> getMeals() {
+        return menuItems.stream()
+                        .filter(menuItem -> menuItem.getItemType().equals(MenuItem.ItemTypes.meal))
+                        .map(menuItem -> (MenuMeal) menuItem)
+                        .collect(
+                                Collectors.toList());
+    }
+
 }

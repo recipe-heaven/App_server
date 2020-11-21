@@ -2,6 +2,7 @@ package no.twct.recipeheaven.user.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.twct.recipeheaven.resources.entity.UserStatus;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
@@ -52,6 +53,8 @@ public class User implements Serializable {
     @JsonbTransient
     @JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "email", referencedColumnName = "email"), inverseJoinColumns = @JoinColumn(name = "groups_name", referencedColumnName = "name"))
     List<Group> groups;
+
+
 
     public User(String email, String name, String username, String password) {
         this.setEmail(email);
