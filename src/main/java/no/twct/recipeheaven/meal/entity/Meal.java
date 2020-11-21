@@ -27,9 +27,6 @@ public class Meal extends CreatableBase {
     @NotEmpty
     String name;
 
-    @Column(name = "is_public")
-    boolean isPublic;
-
     @ManyToMany
     @JoinTable(name = "meal_recipes")
     List<@Valid Recipe> recipes;
