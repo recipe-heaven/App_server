@@ -134,7 +134,6 @@ public class AuthenticationService {
                                @HeaderParam("password") String password, @HeaderParam("email") String email) {
 
 
-
         ResponseBuilder resp;
         try {
             User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
@@ -179,7 +178,7 @@ public class AuthenticationService {
     @RolesAllowed(value = {Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getCurrentUser() {
         ResponseBuilder resp;
-        User            user = getCurrentUser(tk.getName());
+        User            user = getLoggedInUser();
         if (user == null) {
             resp = Response.ok(new ErrorResponse(new ErrorMessage("Could not find user")))
                     .status(Response.Status.INTERNAL_SERVER_ERROR);
@@ -190,15 +189,14 @@ public class AuthenticationService {
     }
 
     /**
-     * Returns the user bu the given email or null if not found
+     * Returns the logged in user - it gets the user by the email in the JWT name field
      *
-     * @param email the email of the user
-     * @return
+     * @return the logged in user or null
      */
-    public User getCurrentUser(String email) {
+    public User getLoggedInUser() {
         try {
-            return em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
-        } catch (Exception e) {
+            return em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", tk.getName()).getSingleResult();
+        } catch (Exception ignored) {
         }
         return null;
     }
@@ -209,7 +207,7 @@ public class AuthenticationService {
     public Response changePassword(@HeaderParam("password") String newPassword) {
 
         try {
-            User user = getCurrentUser(tk.getName());
+            User user = getLoggedInUser();
             user.setPassword(hasher.generate(newPassword.toCharArray()));
             em.merge(user);
             return Response.ok(new DataResponse("Successfully changed password").getResponse()).build();

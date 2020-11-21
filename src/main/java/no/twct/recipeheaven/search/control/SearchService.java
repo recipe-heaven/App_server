@@ -43,7 +43,7 @@ public class SearchService {
      * @return returns the result container
      */
     public SearchResultContainer performMealRecipeMenuSearch(SearchOptions options) {
-        User user = authenticationService.getCurrentUser(jsonWebToken.getName());
+        User user = authenticationService.getLoggedInUser();
         if (user == null) {
             options.setOwnedOnly(false);
         }

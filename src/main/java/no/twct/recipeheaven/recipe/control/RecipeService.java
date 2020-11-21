@@ -94,8 +94,7 @@ public class RecipeService {
             e.printStackTrace();
         }
         recipe.setRecipeImage(formPhotos.get(0));
-        recipe.setCreator(getCurrentUser());
-
+        recipe.setCreator(authenticationService.getLoggedInUser());
         entityManager.persist(recipe);
     }
 
