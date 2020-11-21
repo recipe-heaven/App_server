@@ -2,8 +2,11 @@ package no.twct.recipeheaven.search.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import no.twct.recipeheaven.meal.entity.Meal;
+import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * Data class for search result for a meal.
@@ -13,9 +16,9 @@ import java.math.BigInteger;
 public class MealSearchResult extends Result {
     String[] recipeType;
 
-    public MealSearchResult(BigInteger id, String name, String[] recipeType) {
-        this.setId(id);
-        this.setName(name);
-        this.setRecipeType(recipeType);
+    public MealSearchResult(Meal result) {
+        this.setId(result.getId());
+        this.setName(result.getName());
+        this.setRecipeType(result.getRecipes().stream().map(Recipe::getType).toArray(String[]::new));
     }
 }
