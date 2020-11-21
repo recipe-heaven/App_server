@@ -50,7 +50,7 @@ public class MealService {
         mealInDb.setName(updatedMeal.getName());
         mealInDb.setPublic(updatedMeal.isPublic());
         mealInDb.setRecipes(updatedMeal.getRecipes());
-        entityManager.merge(mealInDb);
+        entityManager.persist(mealInDb);
     }
 
 
