@@ -1,6 +1,5 @@
 package no.twct.recipeheaven.search.control;
 
-import no.twct.recipeheaven.search.entity.Result;
 import no.twct.recipeheaven.search.entity.ResultItem;
 import no.twct.recipeheaven.search.entity.SearchDAO;
 import no.twct.recipeheaven.search.entity.SearchResultContainer;
@@ -52,7 +51,7 @@ public class SearchService {
         SearchResultContainer resultContainer = new SearchResultContainer();
         List<ResultItem>      results;
 
-        if(options.staredOnly){
+        if (options.staredOnly) {
             resultContainer.setResult(getStaredRecipes(options, user));
             return resultContainer;
         }
@@ -66,7 +65,6 @@ public class SearchService {
         resultContainer.setResult(results);
         return resultContainer;
     }
-
 
 
     /**
@@ -120,9 +118,9 @@ public class SearchService {
 
     List<ResultItem> getStaredRecipes(SearchOptions options, User user) {
         List<ResultItem> results = new ArrayList<ResultItem>();
-            searchDAO.searchRecipesByStared(options.searchString, options.recipeType, user.getId()).forEach(recipe -> {
-                results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
-            });
+        searchDAO.searchRecipesByStared(user.getId()).forEach(recipe -> {
+            results.add(new ResultItem(RECIPE_TYPE_NAME, recipe));
+        });
         return results;
     }
 
