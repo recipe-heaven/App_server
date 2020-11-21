@@ -3,6 +3,7 @@ package no.twct.recipeheaven.user.boundry;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.InvalidKeyException;
+import no.twct.recipeheaven.resources.entity.UserStatus;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.response.ErrorResponse;
 import no.twct.recipeheaven.response.errors.ErrorMessage;
@@ -34,7 +35,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
-import java.util.logging.Level;
 
 @Path("authentication")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -137,16 +137,22 @@ public class AuthenticationService {
 
         ResponseBuilder resp;
         try {
-            User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email)
-                    .getSingleResult();
+            User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
             resp = Response.ok(
                     new ErrorResponse(new ErrorMessage("User already exist, please try another email")).getResponse());
         } catch (NoResultException e) {
+
+
             User  newUser   = new User(email, name, username, password);
             Group usergroup = em.find(Group.class, Group.USER_GROUP_NAME);
             newUser.setPassword(hasher.generate(password.toCharArray()));
             newUser.getGroups().add(usergroup);
-            em.merge(newUser);
+
+            em.persist(newUser);
+
+            UserStatus userStatus = new UserStatus(newUser);
+            em.persist(userStatus);
+
             resp = Response.ok(new DataResponse("Successfully created user").getResponse());
         } catch (PersistenceException e) {
             resp = Response.ok(new ErrorResponse(new ErrorMessage("Unexpected error creating the user")).getResponse())
