@@ -34,22 +34,28 @@ public class RecipeResource {
 
 
     /**
-     * Creates a new recipe for the logged in user.
-     * The route is protected
+     * Returns a recipes with all fields by its id.
+     * If the recipe is not found, return 404.
+     * On error 500 server error is returned.
      *
-     * @return returns success/fail response
+     * @return returns response
      */
     @GET
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipe(@PathParam("id") BigInteger id) {
-        FullRecipeDTO recipeDTO = recipeService.getRecipe(id);
-        if (recipeDTO != null) {
-            return Response.ok(new DataResponse(recipeDTO).getResponse()).build();
-        } else {
-            return Response.noContent().build();
+        Response.ResponseBuilder response;
+        try {
+            FullRecipeDTO recipeDTO = recipeService.getRecipe(id);
+            if (recipeDTO != null) {
+                response = Response.ok(new DataResponse(recipeDTO));
+            } else {
+                response = Response.ok(new ErrorResponse("Can't find recipe with id " + id)).status(Response.Status.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response = Response.serverError();
         }
-
+        return response.build();
     }
 
     /**
@@ -62,12 +68,14 @@ public class RecipeResource {
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipeSimple(@PathParam("id") BigInteger id) {
-        RecipeDTO recipeDTO = recipeService.getSimpleRecipe(id);
+        Response.ResponseBuilder response;
+        RecipeDTO                recipeDTO = recipeService.getSimpleRecipe(id);
         if (recipeDTO != null) {
-            return Response.ok(new DataResponse(recipeDTO).getResponse()).build();
+            response = Response.ok(new DataResponse(recipeDTO));
         } else {
-            return Response.noContent().build();
+            response = Response.ok(new ErrorResponse("Can't find recipe with id " + id)).status(Response.Status.NOT_FOUND);
         }
+        return response.build();
     }
 
     /**
@@ -80,12 +88,14 @@ public class RecipeResource {
     @Path("multiple/simple")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMultipleSimple(@QueryParam("ids") String recipeIds) {
+        Response.ResponseBuilder response;
         try {
             var idList = StringParser.convertCsvNumberedStringToBigInt(recipeIds);
-            return Response.ok(new DataResponse(recipeService.getMultiplesimple(idList)).getResponse()).build();
+            response = Response.ok(new DataResponse(recipeService.getMultiplesimple(idList)));
         } catch (Exception e) {
+            response = Response.serverError();
         }
-        return Response.serverError().build();
+        return response.build();
     }
 
     /**
@@ -110,10 +120,10 @@ public class RecipeResource {
             Jsonb  jsonb  = JsonbBuilder.create();
             Recipe recipe = jsonb.fromJson(recipeString, Recipe.class);
             recipeService.createRecipe(recipe, photos);
-            response = Response.ok(new DataResponse().getResponse());
+            response = Response.ok();
         } catch (ConstraintViolationException e) {
             var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
-            response = Response.ok(new ErrorResponse(violations).getResponse());
+            response = Response.ok(new ErrorResponse(violations));
         } catch (Exception e) {
             response = Response.serverError();
         }
