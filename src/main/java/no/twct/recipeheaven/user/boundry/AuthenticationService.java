@@ -81,10 +81,10 @@ public class AuthenticationService {
                     .validate(new UsernamePasswordCredential(email, password));
             if (result.getStatus() == Status.VALID) {
                 String token = generateToken(email, result.getCallerGroups(), request);
-                User   u     = this.getCurrentUser(email);
-                System.out.println(u.getEmail());
-                response = Response.ok(new DataResponse(u).getResponse()).header(HttpHeaders.AUTHORIZATION,
-                                                                                 "Bearer " + token);
+                User   user  = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
+                System.out.println(user.getEmail());
+                response = Response.ok(new DataResponse(user).getResponse()).header(HttpHeaders.AUTHORIZATION,
+                                                                                    "Bearer " + token);
             } else {
                 response = Response.ok(new ErrorResponse(new ErrorMessage("Wrong username / password")).getResponse());
             }
