@@ -1,28 +1,18 @@
 package no.twct.recipeheaven.response;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 public class ErrorResponse extends AbstractResponse {
 
-	public class Error {
+    private Object error = null;
 
-		private Object error;
+    public ErrorResponse(Object error) {
+        this.error = error;
+    }
 
-		public Error(Object error) {
-			this.error = error;
-		}
-
-		public Object getError() {
-			return this.error;
-		}
-
-	}
-
-	private Error response;
-
-	public ErrorResponse(Object error) {
-		response = new Error(error);
-	}
-
-	public Error getResponse() {
-		return this.response;
-	}
+    @Override
+    @JsonbProperty("error")
+    public Object getResponse() {
+        return this.error;
+    }
 }
