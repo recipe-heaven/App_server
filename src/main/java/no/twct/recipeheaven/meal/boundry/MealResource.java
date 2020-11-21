@@ -81,8 +81,12 @@ public class MealResource {
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealSimple(@PathParam("id") BigInteger id) {
-        SimpleMealDTO m = mealService.getSimpleMealDTO(id);
-        return Response.ok(new DataResponse(m).getResponse()).build();
+        SimpleMealDTO mealDTO = mealService.getSimpleMealDTO(id);
+        if (mealDTO != null){
+            return Response.ok(new DataResponse(mealDTO).getResponse()).build();
+        }else {
+            return Response.noContent().build();
+        }
     }
 
     /**
@@ -95,7 +99,20 @@ public class MealResource {
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealFull(@PathParam("id") BigInteger id) {
-        FullMealDTO m = mealService.getFullMealDTO(id);
-        return Response.ok(new DataResponse(m).getResponse()).build();
+        FullMealDTO mealDTO = mealService.getFullMealDTO(id);
+        if (mealDTO != null){
+            return Response.ok(new DataResponse(mealDTO).getResponse()).build();
+        }else {
+            return Response.noContent().build();
+        }
+        //FullMealDTO m = mealService.getFullMealDTO(id);
+        //return Response.ok(new DataResponse(m).getResponse()).build();
+//        Meal meal = mealService.getMeal(id);
+//        if (meal != null){
+//            return Response.ok(new DataResponse(meal).getResponse()).build();
+//        }else {
+//            return Response.noContent().build();
+//        }
+
     }
 }

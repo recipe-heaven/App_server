@@ -1,8 +1,11 @@
 package no.twct.recipeheaven.recipe.boundry;
 
 
+import no.twct.recipeheaven.meal.entity.FullMealDTO;
 import no.twct.recipeheaven.recipe.control.RecipeService;
+import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
 import no.twct.recipeheaven.recipe.entity.Recipe;
+import no.twct.recipeheaven.recipe.entity.RecipeDTO;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.user.entity.Group;
 import no.twct.recipeheaven.util.StringParser;
@@ -37,9 +40,14 @@ public class RecipeResource {
     @GET
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response getRecipe(@PathParam("id") BigInteger recipeId) {
-        var full = recipeService.getRecipe(recipeId);
-        return Response.ok(new DataResponse(full).getResponse()).build();
+    public Response getRecipe(@PathParam("id") BigInteger id) {
+        FullRecipeDTO recipeDTO = recipeService.getRecipe(id);
+        if (recipeDTO != null){
+            return Response.ok(new DataResponse(recipeDTO).getResponse()).build();
+        }else {
+            return Response.noContent().build();
+        }
+
     }
 
     /**
@@ -51,9 +59,13 @@ public class RecipeResource {
     @GET
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response getRecipeSimple(@PathParam("id") BigInteger recipeId) {
-        var simple = recipeService.getSimpleRecipe(recipeId);
-        return Response.ok(new DataResponse(simple).getResponse()).build();
+    public Response getRecipeSimple(@PathParam("id") BigInteger id) {
+        RecipeDTO recipeDTO = recipeService.getSimpleRecipe(id);
+        if (recipeDTO != null){
+            return Response.ok(new DataResponse(recipeDTO).getResponse()).build();
+        }else {
+            return Response.noContent().build();
+        }
     }
 
     /**
