@@ -13,18 +13,12 @@ import java.math.BigInteger;
 @Entity
 @NoArgsConstructor
 @Table(name = "menu_meals")
-public class MenuMeal {
-
-    @Min(0)
-    private int day;
-
-    @NotNull
+public class MenuMeal extends MenuItem {
     @OneToOne
     private Meal meal;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
-
-
+    @Override
+    public ItemTypes getItemType() {
+        return ItemTypes.meal;
+    }
 }

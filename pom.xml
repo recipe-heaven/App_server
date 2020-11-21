@@ -98,11 +98,6 @@
             <version>0.4.11</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

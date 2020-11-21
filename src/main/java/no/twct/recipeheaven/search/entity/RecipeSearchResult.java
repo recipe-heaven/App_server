@@ -2,6 +2,7 @@ package no.twct.recipeheaven.search.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import java.math.BigInteger;
 
@@ -14,10 +15,10 @@ public class RecipeSearchResult extends Result {
     int cookTime;
     String type;
 
-    public RecipeSearchResult(BigInteger id, String name, int cookTime, String recipeType) {
-        this.setId(id);
-        this.setName(name);
-        this.setCookTime(cookTime);
-        this.setType(recipeType);
+    public RecipeSearchResult(Recipe result) {
+        this.setId(result.getId());
+        this.setName(result.getName());
+        this.setCookTime(result.getCookTime());
+        this.setType(result.getType());
     }
 }

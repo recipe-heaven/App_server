@@ -46,9 +46,8 @@ public class MenuService {
         var menuFromDb = entityManager.find(Menu.class, updatedMenu.getId());
 
         menuFromDb.setName(updatedMenu.getName());
-        menuFromDb.setMeals(updatedMenu.getMeals());
+        menuFromDb.setMenuItems(updatedMenu.getMenuItems());
         menuFromDb.setPublic(updatedMenu.isPublic());
-        menuFromDb.setRecipes(updatedMenu.getRecipes());
         entityManager.persist(menuFromDb);
     }
 

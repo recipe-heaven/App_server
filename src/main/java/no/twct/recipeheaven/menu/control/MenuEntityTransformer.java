@@ -47,6 +47,7 @@ public class MenuEntityTransformer {
      * @return returns the minified projection
      */
     public MenuSimpleDTO createSimpleMenuDTO(Menu menu) {
+        if(menu == null) return null;
         MenuSimpleDTO menuSimpleDTO = new MenuSimpleDTO();
         setBaseDtoValues(menuSimpleDTO, menu);
         List<MenuRecipeDTO> recipes = createSimpleMenuRecipeDTO(menu.getRecipes());

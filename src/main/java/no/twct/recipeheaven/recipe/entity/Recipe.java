@@ -15,17 +15,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
-@SqlResultSetMapping(
-        name = "ScheduleResult",
-        classes = {
-                @ConstructorResult(
-                        targetClass = no.twct.recipeheaven.search.entity.RecipeSearchResult.class,
-                        columns = {
-                                @ColumnResult(name = "id", type = BigInteger.class),
-                                @ColumnResult(name = "name", type = String.class),
-                                @ColumnResult(name = "cook_time", type = Integer.class),
-                                @ColumnResult(name = "type", type = String.class)
-                        })})
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -36,13 +26,6 @@ public class Recipe extends CreatableBase {
 
     public static final String GET_MULTIPLE_RECIPCE = "RecipeGetMultipleIds";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
-
-    @NotNull
-    @ManyToOne
-    User creator;
 
     @NotEmpty
     String name;
@@ -78,10 +61,5 @@ public class Recipe extends CreatableBase {
     @Column(name = "recommended_drinks")
     String recommendedDrinks;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updated;
 
 }
