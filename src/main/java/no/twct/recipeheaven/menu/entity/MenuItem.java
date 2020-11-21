@@ -2,8 +2,9 @@ package no.twct.recipeheaven.menu.entity;
 
 import lombok.Data;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.math.BigInteger;
 
 @Entity
@@ -14,12 +15,13 @@ public abstract class MenuItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
 
+    @Min(0)
+    @Max(6)
     private int day;
-
 
     public abstract ItemTypes getItemType();
 
-    public static enum ItemTypes{
+    public enum ItemTypes {
         meal,
         recipe
     }
