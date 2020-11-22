@@ -24,18 +24,12 @@ public class UserMetaService {
     EntityManager entityManager;
 
 
-    /**
-     * returns the current user
-     * @return returns the current user
-     */
-    private User getCurrentUser(){
-        return authenticationService.getCurrentUser(jsonWebToken.getName());
-    }
+
 
 
     public boolean starUserItem(BigInteger id){
         CreatableBase creatableBase = entityManager.find(CreatableBase.class, id);
-        User         user         = getCurrentUser();
+        User         user         = authenticationService.getLoggedInUser();
         UserMetaInfo userMetaInfo = UserMetaInfo.getByUserId(entityManager, user.getId());
 
         if (creatableBase != null){
@@ -48,7 +42,7 @@ public class UserMetaService {
 
     public boolean unstarUserItem(BigInteger id){
         CreatableBase creatableBase = entityManager.find(CreatableBase.class, id);
-        User user = getCurrentUser();
+        User user = authenticationService.getLoggedInUser();
         UserMetaInfo userMetaInfo = UserMetaInfo.getByUserId(entityManager, user.getId());
 
         if (creatableBase != null){
@@ -67,7 +61,7 @@ public class UserMetaService {
      */
     public Menu getUserCurrentMenu(){
 
-        User user = getCurrentUser();
+        User user = authenticationService.getLoggedInUser();
         UserMetaInfo userMetaInfo = UserMetaInfo.getByUserId(entityManager, user.getId());
         return userMetaInfo.getCurrentMenu();
     }
@@ -75,7 +69,7 @@ public class UserMetaService {
     public boolean setUserCurrentMenu(BigInteger id){
         Menu menu = entityManager.find(Menu.class, id);
         if (menu != null){
-            User user = getCurrentUser();
+            User user = authenticationService.getLoggedInUser();
             UserMetaInfo userMetaInfo = UserMetaInfo.getByUserId(entityManager, user.getId());
             userMetaInfo.setCurrentMenu(menu);
             entityManager.merge(userMetaInfo);
