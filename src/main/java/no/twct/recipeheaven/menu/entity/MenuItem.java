@@ -9,6 +9,8 @@ import java.math.BigInteger;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
