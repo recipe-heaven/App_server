@@ -3,26 +3,19 @@ package no.twct.recipeheaven.recipe.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.entity.OwnableEntity;
+import no.twct.recipeheaven.entity.DisplayableEntity;
 import no.twct.recipeheaven.resources.entity.Image;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RecipeDTO extends OwnableEntity {
-    String name;
+public class RecipeDTO extends DisplayableEntity {
 
     String type;
 
     int cookTime;
 
     String description;
-
-    boolean isPublic;
-
-    private Date updated;
 
     private Image image;
 }
