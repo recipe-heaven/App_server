@@ -1,6 +1,6 @@
 package no.twct.recipeheaven.search.boundry;
 
-import no.twct.recipeheaven.response.DataResponse;
+import no.twct.recipeheaven.lib.Resource;
 import no.twct.recipeheaven.search.control.SearchOptions;
 import no.twct.recipeheaven.search.control.SearchService;
 import no.twct.recipeheaven.search.entity.SearchResultContainer;
@@ -22,22 +22,28 @@ import javax.ws.rs.core.Response;
 @Path("search")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class SearchResource {
+public class SearchResource extends Resource {
 
     @Inject
     SearchService searchService;
 
     /**
-     * Handles the searching for recipes, menus and meals.
+     * Performs search in the database for recipes, menus and meals based on the
+     * provided search options.
+     * Returns a list of results, or an empty list of there are no results.
+     * On any other errors 500 message is returned.
      *
-     * @return returns search result
+     * @return returns response
      */
     @POST
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response search(SearchOptions options) {
-        Response.ResponseBuilder resp;
-        SearchResultContainer    res = searchService.performMealRecipeMenuSearch(options);
-        resp = Response.ok(new DataResponse(res).getResponse());
-        return resp.build();
+        try {
+            SearchResultContainer searchResult = searchService.performMealRecipeMenuSearch(options);
+            createDataResponse(searchResult);
+        } catch (Exception e) {
+            serverError();
+        }
+        return buildResponse();
     }
 }
