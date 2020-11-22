@@ -104,8 +104,13 @@ public class MenuResource extends Resource {
     @GET
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response getMealFull(@PathParam("id") BigInteger id) {
-        var m = menuService.getFullMenuDTO(id);
-        return Response.ok(new DataResponse(m).getResponse()).build();
+    public Response getMenuFull(@PathParam("id") BigInteger id) {
+        try {
+            var menuDTO = menuService.getFullMenuDTO(id);
+            createDataResponseOr404(menuDTO, "Can't find a menu with id " + id);
+        } catch (Exception e) {
+            serverError();
+        }
+        return buildResponse();
     }
 }
