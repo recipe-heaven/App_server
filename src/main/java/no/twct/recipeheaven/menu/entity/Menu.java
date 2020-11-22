@@ -7,12 +7,7 @@ import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.meal.entity.Meal;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.persistence.*;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -2,7 +2,6 @@ package no.twct.recipeheaven.recipe.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.eclipse.persistence.annotations.PrimaryKey;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

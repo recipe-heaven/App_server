@@ -4,14 +4,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.Const;
-import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.menu.entity.ValidMenuItem;
 import no.twct.recipeheaven.resources.entity.Image;
-import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
-import java.math.BigInteger;
-import java.util.Date;
 import java.util.List;
 
 
@@ -40,9 +36,6 @@ public class Recipe extends ValidMenuItem {
     Image recipeImage;
 
     String type = Const.RECIPE_TYPE_NAME;
-
-    @Column(name = "is_public")
-    boolean isPublic;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "recipe_id")

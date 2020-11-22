@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.meal.entity.Meal;
 
-import javax.persistence.*;
-import java.math.BigInteger;
-
 @Data
 @NoArgsConstructor @AllArgsConstructor
 public class MenuMeal extends MenuItem {

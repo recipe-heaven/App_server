@@ -1,7 +1,6 @@
 package no.twct.recipeheaven.recipe.boundry;
 
 
-import no.twct.recipeheaven.meal.entity.FullMealDTO;
 import no.twct.recipeheaven.recipe.control.RecipeService;
 import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
 import no.twct.recipeheaven.recipe.entity.Recipe;

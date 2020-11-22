@@ -3,9 +3,7 @@ package no.twct.recipeheaven.menu.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.lib.CreatableBase;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.math.BigInteger;
 

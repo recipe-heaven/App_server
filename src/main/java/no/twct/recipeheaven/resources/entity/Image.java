@@ -2,7 +2,6 @@ package no.twct.recipeheaven.resources.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import javax.persistence.*;
 import java.io.Serializable;
