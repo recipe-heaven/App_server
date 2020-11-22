@@ -10,19 +10,18 @@ import no.twct.recipeheaven.recipe.entity.Recipe;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.*;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Data
 @Entity
 @NoArgsConstructor
 @Table(name = "menus")
 @EqualsAndHashCode(callSuper = true)
-@NamedQuery(name = "Menu.getItemType", query = "select c.dtype from CreatableBase c")
 public class Menu extends CreatableBase {
 
     @NotEmpty
@@ -33,18 +32,18 @@ public class Menu extends CreatableBase {
 
     public List<MenuRecipe> getRecipes() {
         return menuItems.stream()
-                        .filter(menuItem -> menuItem.getMenuDayItem() instanceof Recipe)
-                        .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem()))
-                        .collect(
-                                Collectors.toList());
+                .filter(menuItem -> menuItem.getMenuDayItem() instanceof Recipe)
+                .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem()))
+                .collect(
+                        Collectors.toList());
     }
 
     public List<MenuMeal> getMeals() {
         return menuItems.stream()
-                        .filter(menuItem -> menuItem.getMenuDayItem() instanceof Meal)
-                        .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem()))
-                        .collect(
-                                Collectors.toList());
+                .filter(menuItem -> menuItem.getMenuDayItem() instanceof Meal)
+                .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem()))
+                .collect(
+                        Collectors.toList());
     }
 
 }
