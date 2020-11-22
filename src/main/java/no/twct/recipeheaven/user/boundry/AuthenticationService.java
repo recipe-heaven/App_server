@@ -3,7 +3,7 @@ package no.twct.recipeheaven.user.boundry;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.InvalidKeyException;
-import no.twct.recipeheaven.resources.entity.UserStatus;
+import no.twct.recipeheaven.resources.entity.UserMetaInfo;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.response.ErrorResponse;
 import no.twct.recipeheaven.response.errors.ErrorMessage;
@@ -149,8 +149,8 @@ public class AuthenticationService {
 
             em.persist(newUser);
 
-            UserStatus userStatus = new UserStatus(newUser);
-            em.persist(userStatus);
+            UserMetaInfo userMetaInfo = new UserMetaInfo(newUser);
+            em.persist(userMetaInfo);
 
             resp = Response.ok(new DataResponse("Successfully created user").getResponse());
         } catch (PersistenceException e) {

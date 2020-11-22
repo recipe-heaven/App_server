@@ -18,7 +18,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class CreatableBase {
+public class CreatableBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
