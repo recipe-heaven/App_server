@@ -83,13 +83,13 @@ public class AuthenticationService {
                 String token = generateToken(email, result.getCallerGroups(), request);
                 User   user  = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
                 System.out.println(user.getEmail());
-                response = Response.ok(new DataResponse(user).getResponse()).header(HttpHeaders.AUTHORIZATION,
-                                                                                    "Bearer " + token);
+                response = Response.ok(new DataResponse(user)).header(HttpHeaders.AUTHORIZATION,
+                                                                      "Bearer " + token);
             } else {
-                response = Response.ok(new ErrorResponse(new ErrorMessage("Wrong username / password")).getResponse());
+                response = Response.ok(new ErrorResponse(new ErrorMessage("Wrong username / password")));
             }
         } catch (Exception e) {
-            response = Response.ok(new ErrorResponse(new ErrorMessage("Unexpected login error")).getResponse())
+            response = Response.ok(new ErrorResponse(new ErrorMessage("Unexpected login error")))
                     .status(500);
         }
 
@@ -138,7 +138,7 @@ public class AuthenticationService {
         try {
             User user = em.createNamedQuery(User.USER_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
             resp = Response.ok(
-                    new ErrorResponse(new ErrorMessage("User already exist, please try another email")).getResponse());
+                    new ErrorResponse(new ErrorMessage("User already exist, please try another email")));
         } catch (NoResultException e) {
 
 
@@ -152,9 +152,9 @@ public class AuthenticationService {
             UserMetaInfo userMetaInfo = new UserMetaInfo(newUser);
             em.persist(userMetaInfo);
 
-            resp = Response.ok(new DataResponse("Successfully created user").getResponse());
+            resp = Response.ok(new DataResponse("Successfully created user"));
         } catch (PersistenceException e) {
-            resp = Response.ok(new ErrorResponse(new ErrorMessage("Unexpected error creating the user")).getResponse())
+            resp = Response.ok(new ErrorResponse(new ErrorMessage("Unexpected error creating the user")))
                     .status(500);
         }
         return resp.build();
@@ -183,7 +183,7 @@ public class AuthenticationService {
             resp = Response.ok(new ErrorResponse(new ErrorMessage("Could not find user")))
                     .status(Response.Status.INTERNAL_SERVER_ERROR);
         } else {
-            resp = Response.ok(new DataResponse(user).getResponse());
+            resp = Response.ok(new DataResponse(user));
         }
         return resp.build();
     }
@@ -210,9 +210,9 @@ public class AuthenticationService {
             User user = getLoggedInUser();
             user.setPassword(hasher.generate(newPassword.toCharArray()));
             em.merge(user);
-            return Response.ok(new DataResponse("Successfully changed password").getResponse()).build();
+            return Response.ok(new DataResponse("Successfully changed password")).build();
         } catch (Exception e) {
-            return Response.ok(new ErrorResponse("Failed to change password").getResponse()).status(500).build();
+            return Response.ok(new ErrorResponse("Failed to change password")).status(500).build();
         }
 
     }
