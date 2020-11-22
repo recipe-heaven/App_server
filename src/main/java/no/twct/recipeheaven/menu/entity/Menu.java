@@ -23,6 +23,7 @@ public class Menu extends CreatableBase {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<MenuItem> menuItems;
 
+
     // i am tiered this is temporary
 
     public List<MenuRecipe> getRecipes() {

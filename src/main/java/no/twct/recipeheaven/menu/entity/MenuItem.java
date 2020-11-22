@@ -9,7 +9,6 @@ import java.math.BigInteger;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class MenuItem {
     @Id
@@ -18,7 +17,7 @@ public class MenuItem {
 
     private int day;
 
-    private String type;
+   private String type;
 
     @OneToOne
     private ValidMenuItem menuDayItem;

@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class MenuRecipe extends MenuItem {
     private Recipe recipe;
 }

@@ -22,6 +22,8 @@ public class Recipe extends ValidMenuItem {
     public static final String GET_MULTIPLE_RECIPCE = "RecipeGetMultipleIds";
 
 
+
+
     String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
