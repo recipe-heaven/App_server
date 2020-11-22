@@ -1,6 +1,8 @@
 package no.twct.recipeheaven.menu.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -9,6 +11,8 @@ import java.math.BigInteger;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

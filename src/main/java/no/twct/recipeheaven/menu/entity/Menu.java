@@ -16,7 +16,6 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -32,18 +31,18 @@ public class Menu extends CreatableBase {
 
     public List<MenuRecipe> getRecipes() {
         return menuItems.stream()
-                .filter(menuItem -> menuItem.getMenuDayItem() instanceof Recipe)
-                .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem()))
-                .collect(
-                        Collectors.toList());
+                        .filter(menuItem -> menuItem.getMenuDayItem() instanceof Recipe)
+                        .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem()))
+                        .collect(
+                                Collectors.toList());
     }
 
     public List<MenuMeal> getMeals() {
         return menuItems.stream()
-                .filter(menuItem -> menuItem.getMenuDayItem() instanceof Meal)
-                .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem()))
-                .collect(
-                        Collectors.toList());
+                        .filter(menuItem -> menuItem.getMenuDayItem() instanceof Meal)
+                        .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem()))
+                        .collect(
+                                Collectors.toList());
     }
 
 }

@@ -5,9 +5,6 @@ import lombok.EqualsAndHashCode;
 import no.twct.recipeheaven.meal.entity.Meal;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
-import java.math.BigInteger;
-import java.util.List;
-
 /**
  * Data class for search result for a meal.
  */

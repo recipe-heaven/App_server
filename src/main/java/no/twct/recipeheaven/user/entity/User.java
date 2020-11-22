@@ -2,7 +2,6 @@ package no.twct.recipeheaven.user.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.resources.entity.UserStatus;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;

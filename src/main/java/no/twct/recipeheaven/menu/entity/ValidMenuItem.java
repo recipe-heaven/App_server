@@ -12,5 +12,6 @@ import javax.persistence.InheritanceType;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class ValidMenuItem extends CreatableBase {
+public class ValidMenuItem extends CreatableBase {
+
 }

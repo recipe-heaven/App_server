@@ -57,7 +57,6 @@ public class SearchService {
      */
     public SearchResultContainer performMealRecipeMenuSearch(SearchOptions options) {
         SearchResultContainer resultContainer = new SearchResultContainer();
-
         User user = authenticationService.getLoggedInUser();
 
         if (user == null) {
