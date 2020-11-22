@@ -3,11 +3,15 @@ package no.twct.recipeheaven.recipe.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import no.twct.recipeheaven.Const;
+import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.menu.entity.ValidMenuItem;
 import no.twct.recipeheaven.resources.entity.Image;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -22,27 +26,31 @@ public class Recipe extends ValidMenuItem {
     public static final String GET_MULTIPLE_RECIPCE = "RecipeGetMultipleIds";
 
 
-
-
+    @NotEmpty
     String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    List<RecipeTag> tags;
+    List<@Valid RecipeTag> tags;
 
+    @NotEmpty
     String description;
 
     @Column(name = "cook_time")
+    @Min(0)
     int cookTime = 0;
 
+    @NotNull
     @OneToOne
     Image recipeImage;
 
-    String type = Const.RECIPE_TYPE_NAME;
+    @NotEmpty
+    String type;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "recipe_id")
     List<RecipeIngredient> recipeIngredients;
 
+    @NotEmpty
     @Column(name = "cooking_steps")
     String cookingSteps;
 

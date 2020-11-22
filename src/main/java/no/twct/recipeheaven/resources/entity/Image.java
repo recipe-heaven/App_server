@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.math.BigInteger;
 
@@ -15,18 +17,20 @@ import java.math.BigInteger;
 @NoArgsConstructor
 @Table(name = "images")
 public class Image implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private BigInteger id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private BigInteger id;
 
-	private String name;
+    @NotEmpty
+    private String name;
 
-	@Column(name = "mime_type")
-	private String mimeType;
+    @NotEmpty
+    @Column(name = "mime_type")
+    private String mimeType;
 
-	private float size;
-
+    @Min(0)
+    private float size;
 
 }

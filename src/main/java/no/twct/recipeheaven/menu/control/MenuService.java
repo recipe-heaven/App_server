@@ -32,7 +32,7 @@ public class MenuService {
      * @param menu the menu to create
      */
     public void createMenu(Menu menu) {
-        menu.setCreator(authenticationService.getCurrentUser(jsonWebToken.getName()));
+        menu.setCreator(authenticationService.getLoggedInUser());
         entityManager.persist(menu);
     }
 

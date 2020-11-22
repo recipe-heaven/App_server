@@ -5,7 +5,6 @@ import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.recipe.entity.RecipeDTO;
 import no.twct.recipeheaven.resources.entity.Image;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
-import no.twct.recipeheaven.user.entity.User;
 import no.twct.recipeheaven.util.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.glassfish.jersey.media.multipart.ContentDisposition;
@@ -20,6 +19,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URLConnection;
@@ -59,43 +59,34 @@ public class RecipeService {
     RecipeEntityTransformer recipeEntityTransformer;
 
 
-    private User getCurrentUser() {
-        return authenticationService.getCurrentUser(securityContext.getUserPrincipal().getName());
-    }
-
     public void createRecipe(Recipe recipe,
                              FormDataMultiPart photos
-    ) {
+    ) throws IOException {
         ArrayList<Image> formPhotos = new ArrayList<>();
-        try {
-            List<FormDataBodyPart> images = photos.getFields("image");
-            if (images != null) {
-                for (FormDataBodyPart part : images) {
-                    InputStream        inputStream = part.getEntityAs(InputStream.class);
-                    ContentDisposition meta        = part.getFormDataContentDisposition();
 
-                    String saveName = UUID.randomUUID().toString() + FileUtils.getFilePathExtension(meta.getFileName());
-                    long   size     = Files.copy(inputStream, Paths.get(imageDir.toString(), saveName));
+        List<FormDataBodyPart> images = photos.getFields("image");
+        if (images != null) {
+            for (FormDataBodyPart part : images) {
+                InputStream        inputStream = part.getEntityAs(InputStream.class);
+                ContentDisposition meta        = part.getFormDataContentDisposition();
 
-                    Image photo = new Image();
-                    photo.setName(saveName);
-                    photo.setSize(size);
-                    photo.setMimeType(URLConnection.guessContentTypeFromName(meta.getFileName()));
+                String saveName = UUID.randomUUID().toString() + FileUtils.getFilePathExtension(meta.getFileName());
+                long   size     = Files.copy(inputStream, Paths.get(imageDir.toString(), saveName));
 
-                    formPhotos.add(photo);
+                Image photo = new Image();
+                photo.setName(saveName);
+                photo.setSize(size);
+                photo.setMimeType(URLConnection.guessContentTypeFromName(meta.getFileName()));
 
-                    entityManager.persist(photo);
-                    System.out.println("cc");
-                }
+                formPhotos.add(photo);
 
+                entityManager.persist(photo);
+                System.out.println("cc");
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         recipe.setRecipeImage(formPhotos.get(0));
-        recipe.setCreator(getCurrentUser());
-
+        recipe.setCreator(authenticationService.getLoggedInUser());
         entityManager.persist(recipe);
     }
 

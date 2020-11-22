@@ -1,6 +1,7 @@
 package no.twct.recipeheaven.menu.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.CreatableBase;
 
@@ -8,8 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
-@Entity
 @Data
+@Entity
+@EqualsAndHashCode(callSuper = true)
 @Inheritance(strategy = InheritanceType.JOINED)
 public class ValidMenuItem extends CreatableBase {
 

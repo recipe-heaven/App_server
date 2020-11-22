@@ -7,7 +7,13 @@ import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.meal.entity.Meal;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.*;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +22,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Table(name = "menus")
 @EqualsAndHashCode(callSuper = true)
+@NamedQuery(name = "Menu.getItemType", query = "select c.dtype from CreatableBase c")
 public class Menu extends CreatableBase {
 
+    @NotEmpty
     String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    List<MenuItem> menuItems;
-
-
-    // i am tiered this is temporary
+    List<@Valid MenuItem> menuItems;
 
     public List<MenuRecipe> getRecipes() {
         return menuItems.stream()

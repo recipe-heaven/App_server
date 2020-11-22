@@ -7,6 +7,7 @@ import no.twct.recipeheaven.menu.entity.Menu;
 import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserMetaInfo implements Serializable {
     private User owner;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<CreatableBase> staredEntities;
+    private List<@Valid CreatableBase> staredEntities;
 
     public UserMetaInfo(User owner) {
         this.owner = owner;
