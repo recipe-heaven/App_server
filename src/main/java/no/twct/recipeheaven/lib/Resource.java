@@ -20,8 +20,9 @@ public abstract class Resource {
      *
      * @param data the object to include in the data response.
      */
-    protected void createDataResponse(Object data) {
+    protected Response.ResponseBuilder createDataResponse(Object data) {
         responseBuilder = Response.ok(new DataResponse(data));
+        return responseBuilder;
     }
 
     /**
@@ -31,12 +32,13 @@ public abstract class Resource {
      * @param data         the data to include in the data response. Is not included in 404 resposne
      * @param messageOn404 the message to return if the object is null
      */
-    protected void createDataResponseOr404(Object data, String messageOn404) {
+    protected Response.ResponseBuilder createDataResponseOr404(Object data, String messageOn404) {
         if (data == null) {
             responseBuilder = Response.ok(new ErrorResponse(messageOn404)).status(Response.Status.NOT_FOUND);
         } else {
             this.createDataResponse(data);
         }
+        return responseBuilder;
     }
 
     /**
@@ -44,8 +46,9 @@ public abstract class Resource {
      *
      * @param errorData the object to include in the error response.
      */
-    protected void createErrorResponse(Object errorData) {
+    protected Response.ResponseBuilder createErrorResponse(Object errorData) {
         responseBuilder = Response.ok(new ErrorResponse(errorData));
+        return responseBuilder;
     }
 
     /**
@@ -53,16 +56,18 @@ public abstract class Resource {
      *
      * @param violationException exception to create violation messages from.
      */
-    protected void createConstraintViolationResponse(ConstraintViolationException violationException) {
+    protected Response.ResponseBuilder createConstraintViolationResponse(ConstraintViolationException violationException) {
         var violations = new ViolationErrorMessageBuilder(violationException.getConstraintViolations()).getMessages();
         responseBuilder = Response.ok(new ErrorResponse(violations));
+        return responseBuilder;
     }
 
     /**
      * Creates a 500 response
      */
-    protected void serverError() {
+    protected Response.ResponseBuilder serverError() {
         responseBuilder = Response.serverError();
+        return responseBuilder;
     }
 
     protected Response.ResponseBuilder getResponseBuilder() {
