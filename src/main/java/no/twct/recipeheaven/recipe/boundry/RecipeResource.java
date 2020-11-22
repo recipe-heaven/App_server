@@ -24,7 +24,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.math.BigInteger;
 
-
+/**
+ * Resource path for everything related to recipe(s)
+ */
 @Path("recipe")
 @Stateless
 public class RecipeResource {
@@ -34,10 +36,11 @@ public class RecipeResource {
 
 
     /**
-     * Returns a recipes with all fields by its id.
-     * If the recipe is not found, return 404.
-     * On error 500 server error is returned.
+     * Returns a single full recipe by its id if it is found.
+     * If no recipe is found returns 404.
+     * On any other error a 500 server error is returned.
      *
+     * @param id the id of the recipe to get
      * @return returns response
      */
     @GET
@@ -59,10 +62,12 @@ public class RecipeResource {
     }
 
     /**
-     * Creates a new recipe for the logged in user.
-     * The route is protected
+     * Returns a single simple recipe by its id if it is found.
+     * If no recipe is found returns 404.
+     * On any other error a 500 server error is returned.
      *
-     * @return returns success/fail response
+     * @param id the id of the recipe to get
+     * @return returns response
      */
     @GET
     @Path("simple/{id}")
@@ -79,10 +84,12 @@ public class RecipeResource {
     }
 
     /**
-     * Returns a list of simple recipes from ids provided as query param ?ids=1,2,3,4
+     * Returns a list of simple recipes by the ids provided.
+     * If no recipes are found, an empty list is returned.
+     * On any other error a 500 server error is returned.
      *
-     * @param recipeIds the id of the recipes to get as numbered strings comma separated
-     * @return returns a response with list of simple recipes or empty list or server error.
+     * @param recipeIds the ids of the recipes to get as comma separated string
+     * @return returns response
      */
     @GET
     @Path("multiple/simple")
@@ -98,13 +105,16 @@ public class RecipeResource {
         return response.build();
     }
 
+
     /**
-     * Creates a new recipe for the logged in user.
-     * The route is protected
+     * Creates a new recipe for the logged in user and returns a 200 response.
+     * If the validation fails, a response is returned with error messages for each violation.
+     * On any other error a 500 server error is returned.
+     * The route is protected.
      *
      * @param recipeString the json string of the recipe
-     * @param photos       the image to the recipe
-     * @return returns success/fail response
+     * @param photos       the image of the recipe
+     * @return returns response
      */
     @POST
     @Path("new")
