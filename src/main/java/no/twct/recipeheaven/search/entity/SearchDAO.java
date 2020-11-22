@@ -16,7 +16,6 @@ public class SearchDAO {
     @PersistenceContext
     EntityManager em;
 
-    //    private static final String restrctView = " not (item.isPublic = false and item.creator.id <> :id) ";
     private static final String restrictView = " item.id not in (select ba.id from CreatableBase as ba where ba.isPublic = false and item.creator.id <> :id) ";
 
     private static final String baseRecipeQuery = "SELECT new no.twct.recipeheaven.search.entity.RecipeSearchResult( item) from Recipe AS item where " + restrictView;
@@ -25,8 +24,7 @@ public class SearchDAO {
 
     private static final String queryUserIdFilter = " AND item.creator.id = :id";
     private static final String queryNameFilter = " AND item.name LIKE :name_q";
-    private static final String queryInUserStarFilter = " AND  item.id in (select e.id from UserStatus u JOIN  u.staredEntities e where u.id = :id) ";
-    //    private static final String queryInUserStarFilter = "AND  item.id in (select st.id from (select u.staredEntities from UserStatus as u where u.id = :id) as st) ";
+    private static final String queryInUserStarFilter = " AND  item.id in (select e.id from UserMetaInfo u JOIN  u.staredEntities e where u.id = :id) ";
 
     private static final String queryRecipeTypeFilter = " AND item.type LIKE :type_q";
     private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where rp.name LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where r_tag.tagName = :name_q))  ";
