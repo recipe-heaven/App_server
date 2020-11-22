@@ -33,7 +33,7 @@ public class HappinessResource extends Resource {
     @POST
     @Path("star/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response favoriteItem(@PathParam("id") BigInteger id) {
+    public Response starItem(@PathParam("id") BigInteger id) {
         try {
             if (!happinessService.starUserItem(id)) {
                 createErrorResponse("Failed to star item with id " + id);

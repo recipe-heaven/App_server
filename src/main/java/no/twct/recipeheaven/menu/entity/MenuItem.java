@@ -9,8 +9,7 @@ import java.math.BigInteger;
 
 @Entity
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class MenuItem {
+public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private BigInteger id;
@@ -19,10 +18,8 @@ public abstract class MenuItem {
     @Max(6)
     private int day;
 
-    public abstract ItemTypes getItemType();
+    private String type;
 
-    public enum ItemTypes {
-        meal,
-        recipe
-    }
+    @OneToOne
+    private ValidMenuItem menuDayItem;
 }

@@ -1,5 +1,6 @@
 package no.twct.recipeheaven.menu.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -10,17 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Data
-@Entity
-@NoArgsConstructor
-@Table(name = "menu_recipes")
-@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor @AllArgsConstructor
 public class MenuRecipe extends MenuItem {
-
-    @OneToOne
     private Recipe recipe;
-
-    @Override
-    public ItemTypes getItemType() {
-        return ItemTypes.recipe;
-    }
 }

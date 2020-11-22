@@ -104,8 +104,8 @@ public class MenuResource extends Resource {
     @GET
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
-    public Response getMenuFull(@PathParam("id") BigInteger id) {
-        createDataResponse("TO BE IMPLEMENTED!");
-        return buildResponse();
+    public Response getMealFull(@PathParam("id") BigInteger id) {
+        var m = menuService.getFullMenuDTO(id);
+        return Response.ok(new DataResponse(m).getResponse()).build();
     }
 }
