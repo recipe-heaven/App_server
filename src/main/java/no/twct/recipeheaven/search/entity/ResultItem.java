@@ -1,6 +1,7 @@
 package no.twct.recipeheaven.search.entity;
 
 import lombok.Data;
+import no.twct.recipeheaven.entity.DisplayableEntity;
 
 /**
  * A result item has a type and a result {@link Result}.
@@ -10,9 +11,9 @@ import lombok.Data;
 @Data
 public class ResultItem {
     String type;
-    Result data;
+    DisplayableEntity data;
 
-    public ResultItem(String type, Result data) {
+    public ResultItem(String type, DisplayableEntity data) {
         this.setType(type);
         this.setData(data);
     }
