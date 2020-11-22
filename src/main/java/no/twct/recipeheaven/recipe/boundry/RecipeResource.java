@@ -1,13 +1,11 @@
 package no.twct.recipeheaven.recipe.boundry;
 
 
+import no.twct.recipeheaven.lib.Resource;
 import no.twct.recipeheaven.recipe.control.RecipeService;
 import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.recipe.entity.RecipeDTO;
-import no.twct.recipeheaven.response.DataResponse;
-import no.twct.recipeheaven.response.ErrorResponse;
-import no.twct.recipeheaven.response.errors.ViolationErrorMessageBuilder;
 import no.twct.recipeheaven.user.entity.Group;
 import no.twct.recipeheaven.util.StringParser;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -29,7 +27,7 @@ import java.math.BigInteger;
  */
 @Path("recipe")
 @Stateless
-public class RecipeResource {
+public class RecipeResource extends Resource {
 
     @Inject
     RecipeService recipeService;
@@ -47,18 +45,13 @@ public class RecipeResource {
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipe(@PathParam("id") BigInteger id) {
-        Response.ResponseBuilder response;
         try {
             FullRecipeDTO recipeDTO = recipeService.getRecipe(id);
-            if (recipeDTO != null) {
-                response = Response.ok(new DataResponse(recipeDTO));
-            } else {
-                response = Response.ok(new ErrorResponse("Can't find recipe with id " + id)).status(Response.Status.NOT_FOUND);
-            }
+            createDataResponseOr404(recipeDTO, "Can't find recipe with id " + id);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -73,14 +66,13 @@ public class RecipeResource {
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getRecipeSimple(@PathParam("id") BigInteger id) {
-        Response.ResponseBuilder response;
-        RecipeDTO                recipeDTO = recipeService.getSimpleRecipe(id);
-        if (recipeDTO != null) {
-            response = Response.ok(new DataResponse(recipeDTO));
-        } else {
-            response = Response.ok(new ErrorResponse("Can't find recipe with id " + id)).status(Response.Status.NOT_FOUND);
+        try {
+            RecipeDTO recipeDTO = recipeService.getSimpleRecipe(id);
+            createDataResponseOr404(recipeDTO, "Can't find recipe with id " + id);
+        } catch (Exception e) {
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -95,14 +87,13 @@ public class RecipeResource {
     @Path("multiple/simple")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMultipleSimple(@QueryParam("ids") String recipeIds) {
-        Response.ResponseBuilder response;
         try {
             var idList = StringParser.convertCsvNumberedStringToBigInt(recipeIds);
-            response = Response.ok(new DataResponse(recipeService.getMultiplesimple(idList)));
+            createDataResponse(recipeService.getMultiplesimple(idList));
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
 
@@ -125,19 +116,16 @@ public class RecipeResource {
             FormDataMultiPart photos
 
     ) {
-        Response.ResponseBuilder response;
         try {
             Jsonb  jsonb  = JsonbBuilder.create();
             Recipe recipe = jsonb.fromJson(recipeString, Recipe.class);
             recipeService.createRecipe(recipe, photos);
-            response = Response.ok();
         } catch (ConstraintViolationException e) {
-            var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
-            response = Response.ok(new ErrorResponse(violations));
+            createConstraintViolationResponse(e);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
 

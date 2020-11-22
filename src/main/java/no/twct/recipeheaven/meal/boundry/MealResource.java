@@ -1,12 +1,10 @@
 package no.twct.recipeheaven.meal.boundry;
 
+import no.twct.recipeheaven.lib.Resource;
 import no.twct.recipeheaven.meal.control.MealService;
 import no.twct.recipeheaven.meal.entity.FullMealDTO;
 import no.twct.recipeheaven.meal.entity.Meal;
 import no.twct.recipeheaven.meal.entity.SimpleMealDTO;
-import no.twct.recipeheaven.response.DataResponse;
-import no.twct.recipeheaven.response.ErrorResponse;
-import no.twct.recipeheaven.response.errors.ViolationErrorMessageBuilder;
 import no.twct.recipeheaven.user.entity.Group;
 import no.twct.recipeheaven.util.StringParser;
 
@@ -24,7 +22,7 @@ import java.math.BigInteger;
 @Path("meal")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class MealResource {
+public class MealResource extends Resource {
 
     @Inject
     MealService mealService;
@@ -41,18 +39,15 @@ public class MealResource {
     @POST
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response createMeal(Meal meal) {
-        Response.ResponseBuilder response;
         try {
             mealService.createMeal(meal);
-            response = Response.ok();
         } catch (
                 ConstraintViolationException e) {
-            var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
-            response = Response.ok(new ErrorResponse(violations));
+            createConstraintViolationResponse(e);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -67,18 +62,15 @@ public class MealResource {
     @PATCH
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response updateMeal(Meal meal) {
-        Response.ResponseBuilder response;
         try {
             mealService.updateMeal(meal);
-            return Response.ok().build();
         } catch (
                 ConstraintViolationException e) {
-            var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
-            response = Response.ok(new ErrorResponse(violations));
+            createConstraintViolationResponse(e);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -93,14 +85,13 @@ public class MealResource {
     @Path("multiple/simple")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMultipleSimple(@QueryParam("ids") String mealIds) {
-        Response.ResponseBuilder response;
         try {
             var idList = StringParser.convertCsvNumberedStringToBigInt(mealIds);
-            response = Response.ok(new DataResponse(mealService.getMultipleSimple(idList)));
+            createDataResponse(mealService.getMultipleSimple(idList));
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -115,18 +106,13 @@ public class MealResource {
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealSimple(@PathParam("id") BigInteger id) {
-        Response.ResponseBuilder response;
         try {
             SimpleMealDTO mealDTO = mealService.getSimpleMealDTO(id);
-            if (mealDTO != null) {
-                response = Response.ok(new DataResponse(mealDTO));
-            } else {
-                response = Response.ok(new ErrorResponse("Can't find a meal with id " + id)).status(Response.Status.NOT_FOUND);
-            }
+            createDataResponseOr404(mealDTO, "Can't find a meal with id " + id);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -141,17 +127,12 @@ public class MealResource {
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMealFull(@PathParam("id") BigInteger id) {
-        Response.ResponseBuilder response;
         try {
             FullMealDTO mealDTO = mealService.getFullMealDTO(id);
-            if (mealDTO != null) {
-                response = Response.ok(new DataResponse(mealDTO));
-            } else {
-                response = Response.ok(new ErrorResponse("Can't find a meal with id " + id)).status(Response.Status.NOT_FOUND);
-            }
+            createDataResponseOr404(mealDTO, "Can't find a meal with id " + id);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 }

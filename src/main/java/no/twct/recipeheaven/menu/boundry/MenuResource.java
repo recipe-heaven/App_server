@@ -1,10 +1,8 @@
 package no.twct.recipeheaven.menu.boundry;
 
+import no.twct.recipeheaven.lib.Resource;
 import no.twct.recipeheaven.menu.control.MenuService;
 import no.twct.recipeheaven.menu.entity.Menu;
-import no.twct.recipeheaven.response.DataResponse;
-import no.twct.recipeheaven.response.ErrorResponse;
-import no.twct.recipeheaven.response.errors.ViolationErrorMessageBuilder;
 import no.twct.recipeheaven.user.entity.Group;
 
 import javax.annotation.security.RolesAllowed;
@@ -21,7 +19,7 @@ import java.math.BigInteger;
 @Path("menu")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class MenuResource {
+public class MenuResource extends Resource {
 
     @Inject
     MenuService menuService;
@@ -38,18 +36,15 @@ public class MenuResource {
     @POST
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response createMenu(Menu menu) {
-        Response.ResponseBuilder response;
         try {
             menuService.createMenu(menu);
-            return Response.ok().build();
         } catch (
                 ConstraintViolationException e) {
-            var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
-            response = Response.ok(new ErrorResponse(violations));
+            createConstraintViolationResponse(e);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
     /**
@@ -64,18 +59,15 @@ public class MenuResource {
     @PATCH
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response updateMenu(Menu menu) {
-        Response.ResponseBuilder response;
         try {
             menuService.updateMenu(menu);
-            response = Response.ok();
         } catch (
                 ConstraintViolationException e) {
-            var violations = new ViolationErrorMessageBuilder(e.getConstraintViolations()).getMessages();
-            response = Response.ok(new ErrorResponse(violations));
+            createConstraintViolationResponse(e);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
 
@@ -91,18 +83,13 @@ public class MenuResource {
     @Path("simple/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMenuSimple(@PathParam("id") BigInteger id) {
-        Response.ResponseBuilder response;
         try {
             var menuDTO = menuService.getSimpleMenuDTO(id);
-            if (menuDTO != null) {
-                response = Response.ok(new DataResponse(menuDTO));
-            } else {
-                response = Response.ok(new ErrorResponse("Can't find a menu with id " + id)).status(Response.Status.NOT_FOUND);
-            }
+            createDataResponseOr404(menuDTO, "Can't find a menu with id " + id);
         } catch (Exception e) {
-            response = Response.serverError();
+            serverError();
         }
-        return response.build();
+        return buildResponse();
     }
 
 
@@ -118,6 +105,7 @@ public class MenuResource {
     @Path("full/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getMenuFull(@PathParam("id") BigInteger id) {
-        return Response.ok(new DataResponse("TO BE IMPLEMENTED")).build();
+        createDataResponse("TO BE IMPLEMENTED!");
+        return buildResponse();
     }
 }
