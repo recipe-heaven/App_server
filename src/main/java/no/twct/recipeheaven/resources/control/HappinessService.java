@@ -2,7 +2,6 @@ package no.twct.recipeheaven.resources.control;
 
 import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.resources.entity.UserStatus;
-import no.twct.recipeheaven.search.entity.SearchDAO;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import no.twct.recipeheaven.user.entity.User;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -28,7 +27,7 @@ public class HappinessService {
 
     public boolean starUserItem(BigInteger id){
         CreatableBase creatableBase = entityManager.find(CreatableBase.class, id);
-        User user = authenticationService.getCurrentUser(jsonWebToken.getName());
+        User user = authenticationService.getLoggedInUser();
         UserStatus userStatus = UserStatus.getByUserId(entityManager, user.getId());
 
         if (creatableBase != null){
@@ -41,7 +40,7 @@ public class HappinessService {
 
     public boolean unstarUserItem(BigInteger id){
         CreatableBase creatableBase = entityManager.find(CreatableBase.class, id);
-        User user = authenticationService.getCurrentUser(jsonWebToken.getName());
+        User user = authenticationService.getLoggedInUser();
         UserStatus userStatus = UserStatus.getByUserId(entityManager, user.getId());
 
         if (creatableBase != null){

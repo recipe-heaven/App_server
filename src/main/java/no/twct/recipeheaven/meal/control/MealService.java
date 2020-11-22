@@ -36,7 +36,7 @@ public class MealService {
      * @param meal the meal to save
      */
     public void createMeal(Meal meal) {
-        meal.setCreator(authenticationService.getCurrentUser(token.getName()));
+        meal.setCreator(authenticationService.getLoggedInUser());
         entityManager.persist(meal);
     }
 

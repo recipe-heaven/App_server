@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.math.BigInteger;
 
 @Data
@@ -18,6 +19,7 @@ public class RecipeIngredient {
 
     String name;
 
+    @Min(0)
     int amount;
 
     String unitType;

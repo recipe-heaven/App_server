@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.user.entity.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -26,7 +27,7 @@ public abstract class CreatableBase {
     @Column(name = "is_public")
     boolean isPublic;
 
-
+    @NotNull
     @OneToOne
     @JoinColumn(name = "creator", referencedColumnName = "id", nullable = false)
     User creator;

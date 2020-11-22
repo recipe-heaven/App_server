@@ -1,31 +1,21 @@
 package no.twct.recipeheaven.response;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 public class DataResponse extends AbstractResponse {
 
-	public class Data {
-		private Object data;
+    private Object data = null;
 
-		public Data(Object data) {
-			this.data = data;
-		}
+    public DataResponse() {
+    }
 
-		public Object getData() {
-			return this.data;
-		}
+    public DataResponse(Object data) {
+        this.data = data;
+    }
 
-	}
-
-	private Data response;
-
-	public DataResponse() {
-		response = new Data("");
-	}
-
-	public DataResponse(Object data) {
-		response = new Data(data);
-	}
-
-	public Data getResponse() {
-		return this.response;
-	}
+    @Override
+    @JsonbProperty("data")
+    public Object getResponse() {
+        return data;
+    }
 }

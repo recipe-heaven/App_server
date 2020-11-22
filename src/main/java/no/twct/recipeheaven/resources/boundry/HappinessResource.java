@@ -1,5 +1,6 @@
 package no.twct.recipeheaven.resources.boundry;
 
+import no.twct.recipeheaven.lib.Resource;
 import no.twct.recipeheaven.resources.control.HappinessService;
 import no.twct.recipeheaven.user.entity.Group;
 
@@ -15,29 +16,33 @@ import java.math.BigInteger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Transactional
-public class HappinessResource {
+public class HappinessResource extends Resource {
 
     @Inject
     HappinessService happinessService;
 
-
     /**
-     * Registers a star to the item id provided
+     * Adds a favorite tag to an item with given id.
+     * If the staring is successful returns ok response.
+     * If not, returns an error message.
+     * On any other error a 500 server error is returned.
      *
-     * @param id the item id liked
-     * @return returns success/fail response
+     * @param id the id of the item to favorite
+     * @return returns response
      */
     @POST
     @Path("star/{id}")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response starItem(@PathParam("id") BigInteger id) {
-        if (happinessService.starUserItem(id)){
-            return Response.ok().build();
-        }else {
-            return Response.noContent().build();
+        try {
+            if (!happinessService.starUserItem(id)) {
+                createErrorResponse("Failed to star item with id " + id);
+            }
+        } catch (Exception e) {
+            serverError();
         }
+        return buildResponse();
     }
-
 
 
 }

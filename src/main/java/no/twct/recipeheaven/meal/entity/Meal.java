@@ -8,6 +8,8 @@ import no.twct.recipeheaven.menu.entity.ValidMenuItem;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -23,14 +25,12 @@ public class Meal extends ValidMenuItem {
 
     public static final String GET_MULTIPLE_MEALS = "MealGetMultipleIds";
 
+    @NotEmpty
     String name;
-
-    @Column(name = "is_public")
-    boolean isPublic;
 
     @ManyToMany
     @JoinTable(name = "meal_recipes")
-    List<Recipe> recipes;
+    List<@Valid Recipe> recipes;
 
 }
 
