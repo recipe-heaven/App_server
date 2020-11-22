@@ -63,7 +63,7 @@ public class ResourcesResource extends Resource {
             CacheControl cc = new CacheControl();
             cc.setMaxAge(86400);
             cc.setPrivate(true);
-            createDataResponse(result).cacheControl(cc).type(imageObject.getMimeType());
+            return Response.ok(result).cacheControl(cc).type(imageObject.getMimeType()).build();
         } else {
             createDataResponseOr404(imageObject, "Could not find image");
         }
