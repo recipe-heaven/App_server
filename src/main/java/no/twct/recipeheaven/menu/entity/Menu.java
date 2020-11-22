@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Table(name = "menus")
 @EqualsAndHashCode(callSuper = true)
-@NamedQuery(name = "Menu.getItemType", query = "select c.dtype from CreatableBase c")
 public class Menu extends CreatableBase {
 
     String name;
