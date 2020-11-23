@@ -2,7 +2,6 @@ package no.twct.recipeheaven.menu.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import no.twct.recipeheaven.lib.CreatableBase;
 
 import javax.persistence.Entity;
