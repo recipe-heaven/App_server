@@ -36,7 +36,6 @@ public class MenuEntityTransformer {
         dto.setName(menu.getName());
         dto.setPublic(menu.isPublic());
         dto.setUpdated(menu.getUpdated());
-        System.out.println(menu.getCreator().getEmail());
         dto.setOwner(userEntityTransformer.createUserDetailsDTO(menu.getCreator()));
     }
 
