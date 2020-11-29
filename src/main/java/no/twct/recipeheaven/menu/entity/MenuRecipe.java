@@ -14,4 +14,10 @@ import javax.persistence.Table;
 @NoArgsConstructor @AllArgsConstructor
 public class MenuRecipe extends MenuItem {
     private Recipe recipe;
+
+    MenuRecipe(Recipe recipe, int day){
+        super(day);
+        this.recipe = recipe;
+
+    }
 }

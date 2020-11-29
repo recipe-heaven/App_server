@@ -10,4 +10,9 @@ import no.twct.recipeheaven.meal.entity.Meal;
 @AllArgsConstructor
 public class MenuMeal extends MenuItem {
     private Meal meal;
+
+    MenuMeal(Meal meal, int day){
+        super(day);
+        this.meal = meal;
+    }
 }
