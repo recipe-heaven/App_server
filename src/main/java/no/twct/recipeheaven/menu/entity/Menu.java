@@ -23,7 +23,7 @@ public class Menu extends CreatableBase {
     @NotEmpty
     String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(cascade = CascadeType.ALL)//, orphanRemoval = true)
     List<@Valid MenuItem> menuItems;
 
     public List<MenuRecipe> getRecipes() {
