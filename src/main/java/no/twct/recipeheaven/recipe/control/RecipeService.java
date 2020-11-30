@@ -12,6 +12,8 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 import javax.inject.Inject;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
@@ -62,8 +64,49 @@ public class RecipeService {
     public void createRecipe(Recipe recipe,
                              FormDataMultiPart photos
     ) throws IOException {
-        ArrayList<Image> formPhotos = new ArrayList<>();
 
+        Image formPhoto = savePhoto(photos);
+        entityManager.persist(formPhoto);
+        recipe.setRecipeImage(formPhoto);
+        recipe.setCreator(authenticationService.getLoggedInUser());
+        entityManager.persist(recipe);
+    }
+
+    public void editRecipe(Recipe recipe,
+                           FormDataMultiPart photos) throws IOException {
+
+        Image formImage = savePhoto(photos);
+
+        Recipe current = entityManager.find(Recipe.class, recipe.getId());
+
+        if (formImage != null){
+            entityManager.persist(formImage);
+            current.setRecipeImage(formImage);
+        }
+
+        current.setName(recipe.getName());
+        current.setTags(recipe.getTags());
+        current.setDescription(recipe.getDescription());
+        current.setCookTime(recipe.getCookTime());
+        current.setType(recipe.getType());
+        current.setRecipeIngredients(recipe.getRecipeIngredients());
+        current.setCookingSteps(recipe.getCookingSteps());
+        current.setRecommendedDrinks(recipe.getRecommendedDrinks());
+
+
+        entityManager.persist(current);
+
+    }
+
+    /**
+     * tries to return the first image in the form null is returned if unsucsessfull
+     *
+     * @param photos
+     * @return
+     * @throws IOException
+     */
+    private Image savePhoto(FormDataMultiPart photos) throws IOException {
+        if (photos == null){return null;}
         List<FormDataBodyPart> images = photos.getFields("image");
         if (images != null) {
             for (FormDataBodyPart part : images) {
@@ -77,18 +120,14 @@ public class RecipeService {
                 photo.setName(saveName);
                 photo.setSize(size);
                 photo.setMimeType(URLConnection.guessContentTypeFromName(meta.getFileName()));
-
-                formPhotos.add(photo);
-
-                entityManager.persist(photo);
-                System.out.println("cc");
+                //formPhotos.add(photo);
+                return photo;
             }
-
         }
-        recipe.setRecipeImage(formPhotos.get(0));
-        recipe.setCreator(authenticationService.getLoggedInUser());
-        entityManager.persist(recipe);
+        return null;
     }
+
+
 
     /**
      * Returns a full recipe object with all fields

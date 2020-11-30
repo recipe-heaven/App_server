@@ -8,6 +8,7 @@ import no.twct.recipeheaven.recipe.entity.Recipe;
 import no.twct.recipeheaven.recipe.entity.RecipeDTO;
 import no.twct.recipeheaven.user.entity.Group;
 import no.twct.recipeheaven.util.StringParser;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -103,7 +104,7 @@ public class RecipeResource extends Resource {
      * On any other error a 500 server error is returned.
      * The route is protected.
      *
-     * @param recipeString the json string of the recipe
+     * @param recipePart
      * @param photos       the image of the recipe
      * @return returns response
      */
@@ -112,13 +113,13 @@ public class RecipeResource extends Resource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response createRecipe(
-            @FormDataParam("recipe") String recipeString,
+            @FormDataParam("recipe") FormDataBodyPart recipePart,
             FormDataMultiPart photos
 
     ) {
         try {
-            Jsonb  jsonb  = JsonbBuilder.create();
-            Recipe recipe = jsonb.fromJson(recipeString, Recipe.class);
+            recipePart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+            Recipe recipe = recipePart.getValueAs(Recipe.class);
             recipeService.createRecipe(recipe, photos);
         } catch (ConstraintViolationException e) {
             createConstraintViolationResponse(e);
@@ -127,6 +128,29 @@ public class RecipeResource extends Resource {
         }
         return buildResponse();
     }
+
+    @POST
+    @Path("edit")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
+    public Response editRecipe(
+            @FormDataParam("recipe") FormDataBodyPart recipePart,
+            FormDataMultiPart photos
+
+    ) {
+        try {
+            recipePart.setMediaType(MediaType.APPLICATION_JSON_TYPE);
+            Recipe recipe = recipePart.getValueAs(Recipe.class);
+            recipeService.editRecipe(recipe, photos);
+        } catch (ConstraintViolationException e) {
+            createConstraintViolationResponse(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            serverError();
+        }
+        return buildResponse();
+    }
+
 
 
 }
