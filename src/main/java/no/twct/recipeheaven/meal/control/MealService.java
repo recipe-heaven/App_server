@@ -37,8 +37,8 @@ public class MealService {
      */
     public Meal createMeal(Meal meal) {
         meal.setCreator(authenticationService.getLoggedInUser());
-        entityManager.persist(meal);
-        return meal;
+
+        return entityManager.merge(meal);
     }
 
     /**
