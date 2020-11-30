@@ -40,7 +40,9 @@ public class MealResource extends Resource {
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response createMeal(Meal meal) {
         try {
-            mealService.createMeal(meal);
+            var m =mealService.createMeal(meal);
+            System.out.println(m.getId());
+            createDataResponseOr404(m,"kljafd");
         } catch (
                 ConstraintViolationException e) {
             createConstraintViolationResponse(e);

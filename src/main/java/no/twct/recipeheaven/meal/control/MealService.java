@@ -35,9 +35,10 @@ public class MealService {
      *
      * @param meal the meal to save
      */
-    public void createMeal(Meal meal) {
+    public Meal createMeal(Meal meal) {
         meal.setCreator(authenticationService.getLoggedInUser());
         entityManager.persist(meal);
+        return meal;
     }
 
     /**
