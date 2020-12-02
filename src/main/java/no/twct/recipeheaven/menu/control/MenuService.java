@@ -1,7 +1,7 @@
 package no.twct.recipeheaven.menu.control;
 
 import no.twct.recipeheaven.menu.entity.Menu;
-import no.twct.recipeheaven.menu.entity.MenuSimpleDTO;
+import no.twct.recipeheaven.menu.entity.MenuDTO;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -56,7 +56,7 @@ public class MenuService {
      *
      * @param id id of the menu to get
      */
-    public MenuSimpleDTO getSimpleMenuDTO(BigInteger id) {
+    public MenuDTO getSimpleMenuDTO(BigInteger id) {
         var menu = entityManager.find(Menu.class, id);
         if (menu != null) {
             return menuEntityTransformer.createSimpleMenuDTO(menu);
@@ -69,9 +69,12 @@ public class MenuService {
      *
      * @param id id of the menu to get
      */
-    public Menu getFullMenuDTO(BigInteger id) {
-        return entityManager.find(Menu.class, id);
-        // TODO
+    public MenuDTO getFullMenuDTO(BigInteger id) {
+        var menu = entityManager.find(Menu.class, id);
+        if (menu != null) {
+            return menuEntityTransformer.createFullMenuDTO(menu);
+        }
+        return null;
     }
 
 

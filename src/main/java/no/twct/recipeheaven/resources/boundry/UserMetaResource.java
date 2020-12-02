@@ -96,8 +96,8 @@ public class UserMetaResource extends Resource {
     @Path("current-menu")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getCurrentMenu() {
-        MenuDTO menu = menuEntityTransformer.createSimpleMenuDTO(userMetaService.getUserCurrentMenu());
-        createDataResponseOr404(menu, "Can't find a menu with id ");
+        var menu = userMetaService.getUserCurrentMenu();
+        createDataResponseOr404(menu, "The user has no active menu");
         return buildResponse();
     }
 
