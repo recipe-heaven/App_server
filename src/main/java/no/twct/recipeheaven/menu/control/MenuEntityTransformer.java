@@ -74,7 +74,7 @@ public class MenuEntityTransformer {
 
 
     /**
-     * Creates a list of menu recipes DTOs with all recipes simplified
+     * Creates a list of menu recipes DTOs with full recipes
      *
      * @param menuRecipes list of menu recipes to transform to DTO
      * @return returns a list of DTOs
