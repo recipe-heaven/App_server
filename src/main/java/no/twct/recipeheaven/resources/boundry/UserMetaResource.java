@@ -1,8 +1,11 @@
 package no.twct.recipeheaven.resources.boundry;
 
 import no.twct.recipeheaven.lib.Resource;
+import no.twct.recipeheaven.menu.control.MenuEntityTransformer;
 import no.twct.recipeheaven.menu.entity.Menu;
+import no.twct.recipeheaven.menu.entity.MenuDTO;
 import no.twct.recipeheaven.resources.control.UserMetaService;
+import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.user.entity.Group;
 
 import javax.annotation.security.RolesAllowed;
@@ -22,6 +25,8 @@ public class UserMetaResource extends Resource {
     @Inject
     UserMetaService userMetaService;
 
+    @Inject
+    MenuEntityTransformer menuEntityTransformer;
 
     /**
      * Adds a favorite tag to an item with given id.
@@ -91,12 +96,9 @@ public class UserMetaResource extends Resource {
     @Path("current-menu")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getCurrentMenu() {
-        Menu menu = userMetaService.getUserCurrentMenu();
-        if (menu != null){
-            return Response.ok().build();
-        }else {
-            return Response.noContent().build();
-        }
+        var menu = userMetaService.getUserCurrentMenu();
+        createDataResponseOr404(menu, "The user has no active menu");
+        return buildResponse();
     }
 
 }

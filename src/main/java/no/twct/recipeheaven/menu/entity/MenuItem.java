@@ -26,4 +26,8 @@ public class MenuItem {
 
     @OneToOne
     private ValidMenuItem menuDayItem;
+
+    MenuItem(int day){
+        this.day = day;
+    }
 }

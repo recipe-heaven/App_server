@@ -7,11 +7,7 @@ import no.twct.recipeheaven.lib.CreatableBase;
 import no.twct.recipeheaven.meal.entity.Meal;
 import no.twct.recipeheaven.recipe.entity.Recipe;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.*;
-import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -33,7 +29,7 @@ public class Menu extends CreatableBase {
     public List<MenuRecipe> getRecipes() {
         return menuItems.stream()
                         .filter(menuItem -> menuItem.getMenuDayItem() instanceof Recipe)
-                        .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem()))
+                        .map(menuItem -> new MenuRecipe((Recipe) menuItem.getMenuDayItem(), menuItem.getDay()))
                         .collect(
                                 Collectors.toList());
     }
@@ -41,7 +37,7 @@ public class Menu extends CreatableBase {
     public List<MenuMeal> getMeals() {
         return menuItems.stream()
                         .filter(menuItem -> menuItem.getMenuDayItem() instanceof Meal)
-                        .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem()))
+                        .map(menuItem -> new MenuMeal((Meal) menuItem.getMenuDayItem(), menuItem.getDay()))
                         .collect(
                                 Collectors.toList());
     }
