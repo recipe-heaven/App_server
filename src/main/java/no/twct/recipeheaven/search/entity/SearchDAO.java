@@ -27,11 +27,11 @@ public class SearchDAO {
     private static final String baseMealQuery = "SELECT item from Meal AS item where " + restrictView;
 
     private static final String queryUserIdFilter = " AND item.creator.id = :id";
-    private static final String queryNameFilter = " AND item.name LIKE :name_q";
+    private static final String queryNameFilter = " AND lower(item.name) LIKE :name_q";
     private static final String queryInUserStarFilter = " AND  item.id in (select e.id from UserMetaInfo u JOIN  u.staredEntities e where u.id = :id) ";
 
     private static final String queryRecipeTypeFilter = " AND item.type LIKE :type_q";
-    private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where rp.name LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where r_tag.tagName = :tag_q))  ";
+    private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where lower(rp.name) LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where lower(r_tag.tagName) = :tag_q))  ";
 
 
     /**************
@@ -40,7 +40,7 @@ public class SearchDAO {
     public List<Recipe> searchRecipesByStared(BigInteger userId) {
         String queryString = baseRecipeQuery + queryInUserStarFilter;
 
-        TypedQuery<Recipe> query = em.createQuery(queryString, Recipe.class);
+        TypedQuery<Recipe> query = em.createQuery(queryString.toLowerCase(), Recipe.class);
         query.setParameter("id", userId);
         return query.getResultList();
     }
@@ -56,9 +56,10 @@ public class SearchDAO {
     public List<Recipe> searchRecipesByNameAndTags(String searchString, String recipeType, BigInteger userId) {
         String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryRecipeTypeFilter;
 
+        System.out.println(recipeType);
         TypedQuery<Recipe> query = em.createQuery(queryString, Recipe.class);
-        query.setParameter("name_q", "%" + searchString + "%");
-        query.setParameter("tag_q",  searchString );
+        query.setParameter("name_q", "%" + searchString.toLowerCase() + "%");
+        query.setParameter("tag_q",  searchString.toLowerCase() );
         query.setParameter("type_q",  "%" + recipeType + "%" );
         query.setParameter("id", userId);
 
@@ -76,10 +77,12 @@ public class SearchDAO {
      * @return list of recipe results or empty list
      */
     public List<Recipe> searchRecipesByNameAndTagsOwnerOnly(String searchString, String recipeType, BigInteger userId) {
-        String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryUserIdFilter;
+        String queryString = baseRecipeQuery + queryNameAndTagTypeFilter + queryUserIdFilter + queryRecipeTypeFilter;
 
         TypedQuery<Recipe> query = em.createQuery(queryString, Recipe.class);
-        query.setParameter("name_q", "%" + searchString + "%");
+        query.setParameter("name_q", "%" + searchString.toLowerCase() + "%");
+        query.setParameter("tag_q",  searchString.toLowerCase() );
+        query.setParameter("type_q",  "%" + recipeType + "%" );
         query.setParameter("id", userId);
         return query.getResultList();
     }
@@ -100,7 +103,7 @@ public class SearchDAO {
         String queryString = baseMealQuery + queryNameFilter;
 
         TypedQuery<Meal> query = em.createQuery(queryString, Meal.class);
-        query.setParameter("name_q", "%" + searchString + "%");
+        query.setParameter("name_q", "%" + searchString.toLowerCase() + "%");
         query.setParameter("id", userId);
         return query.getResultList();
     }
@@ -116,7 +119,7 @@ public class SearchDAO {
         String queryString = baseMealQuery + queryNameFilter + queryUserIdFilter;
 
         TypedQuery<Meal> query = em.createQuery(queryString, Meal.class);
-        query.setParameter("name_q", "%" + searchString + "%");
+        query.setParameter("name_q", "%" + searchString.toLowerCase() + "%");
         query.setParameter("id", userId);
         return query.getResultList();
     }
@@ -137,7 +140,7 @@ public class SearchDAO {
         String queryString = baseMenuQuery + queryNameFilter;
 
         TypedQuery<Menu> query = em.createQuery(queryString, Menu.class);
-        query.setParameter("name_q", "%" + searchString + "%");
+        query.setParameter("name_q", "%" + searchString.toLowerCase() + "%");
         query.setParameter("id", userId);
         return query.getResultList();
     }
@@ -153,7 +156,7 @@ public class SearchDAO {
         String queryString = baseMenuQuery + queryNameFilter + queryUserIdFilter;
 
         TypedQuery<Menu> query = em.createQuery(queryString, Menu.class);
-        query.setParameter("name_q", "%" + searchString + "%");
+        query.setParameter("name_q", "%" + searchString.toLowerCase() + "%");
         query.setParameter("id", userId);
         return query.getResultList();
     }
