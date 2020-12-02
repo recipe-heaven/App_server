@@ -1,6 +1,7 @@
 package no.twct.recipeheaven.resources.boundry;
 
 import no.twct.recipeheaven.lib.Resource;
+import no.twct.recipeheaven.menu.control.MenuEntityTransformer;
 import no.twct.recipeheaven.menu.entity.Menu;
 import no.twct.recipeheaven.menu.entity.MenuDTO;
 import no.twct.recipeheaven.resources.control.UserMetaService;
@@ -24,6 +25,8 @@ public class UserMetaResource extends Resource {
     @Inject
     UserMetaService userMetaService;
 
+    @Inject
+    MenuEntityTransformer menuEntityTransformer;
 
     /**
      * Adds a favorite tag to an item with given id.
