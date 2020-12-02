@@ -31,7 +31,7 @@ public class SearchDAO {
     private static final String queryInUserStarFilter = " AND  item.id in (select e.id from UserMetaInfo u JOIN  u.staredEntities e where u.id = :id) ";
 
     private static final String queryRecipeTypeFilter = " AND item.type LIKE :type_q";
-    private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where rp.name LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where r_tag.tagName = :name_q))  ";
+    private static final String queryNameAndTagTypeFilter = " AND item.id in (select rp.id from Recipe as rp where rp.name LIKE :name_q OR rp.id in (select r_tag.id from RecipeTag as r_tag where r_tag.tagName = :tag_q))  ";
 
 
     /**************
@@ -58,8 +58,10 @@ public class SearchDAO {
 
         TypedQuery<Recipe> query = em.createQuery(queryString, Recipe.class);
         query.setParameter("name_q", "%" + searchString + "%");
-        query.setParameter("type_q", "%" + recipeType + "%");
+        query.setParameter("tag_q",  searchString );
+        query.setParameter("type_q",  "%" + recipeType + "%" );
         query.setParameter("id", userId);
+
         return query.getResultList();
     }
 
