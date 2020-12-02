@@ -2,6 +2,7 @@ package no.twct.recipeheaven.resources.boundry;
 
 import no.twct.recipeheaven.lib.Resource;
 import no.twct.recipeheaven.menu.entity.Menu;
+import no.twct.recipeheaven.menu.entity.MenuDTO;
 import no.twct.recipeheaven.resources.control.UserMetaService;
 import no.twct.recipeheaven.response.DataResponse;
 import no.twct.recipeheaven.user.entity.Group;
@@ -92,8 +93,8 @@ public class UserMetaResource extends Resource {
     @Path("current-menu")
     @RolesAllowed({Group.USER_GROUP_NAME, Group.ADMIN_GROUP_NAME})
     public Response getCurrentMenu() {
-        Menu menu = userMetaService.getUserCurrentMenu();
-        createDataResponseOr404(menu, "Can't find a menu with id ");
+        var menu = userMetaService.getUserCurrentMenu();
+        createDataResponseOr404(menu, "The user has no active menu");
         return buildResponse();
     }
 

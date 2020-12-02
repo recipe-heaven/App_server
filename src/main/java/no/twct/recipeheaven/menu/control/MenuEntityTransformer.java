@@ -4,6 +4,7 @@ import no.twct.recipeheaven.entity.DisplayableEntity;
 import no.twct.recipeheaven.meal.control.MealEntityTransformer;
 import no.twct.recipeheaven.menu.entity.*;
 import no.twct.recipeheaven.recipe.control.RecipeEntityTransformer;
+import no.twct.recipeheaven.recipe.entity.FullRecipeDTO;
 import no.twct.recipeheaven.user.control.UserEntityTransformer;
 
 import javax.inject.Inject;
@@ -45,9 +46,9 @@ public class MenuEntityTransformer {
      * @param menu the menu to transform
      * @return returns the minified projection
      */
-    public MenuSimpleDTO createSimpleMenuDTO(Menu menu) {
+    public MenuDTO createSimpleMenuDTO(Menu menu) {
         if(menu == null) return null;
-        MenuSimpleDTO menuSimpleDTO = new MenuSimpleDTO();
+        MenuDTO menuSimpleDTO = new MenuDTO();
         setBaseDtoValues(menuSimpleDTO, menu);
         List<MenuRecipeDTO> recipes = createSimpleMenuRecipeDTO(menu.getRecipes());
         List<MenuMealDTO>   meals   = createSimpleMenuMealDTO(menu.getMeals());
@@ -71,6 +72,22 @@ public class MenuEntityTransformer {
         }).collect(Collectors.toList());
     }
 
+
+    /**
+     * Creates a list of menu recipes DTOs with all recipes simplified
+     *
+     * @param menuRecipes list of menu recipes to transform to DTO
+     * @return returns a list of DTOs
+     */
+    private List<MenuRecipeDTO> createFullMenuRecipeDTO(List<MenuRecipe> menuRecipes) {
+        return menuRecipes.stream().map(menuRecipe -> {
+            var menuRecipeDTO = new MenuRecipeDTO();
+            menuRecipeDTO.setDay(menuRecipe.getDay());
+            menuRecipeDTO.setRecipe(recipeEntityTransformer.createFullRecipeDTO(menuRecipe.getRecipe()));
+            return menuRecipeDTO;
+        }).collect(Collectors.toList());
+    }
+
     /**
      * Creates a list of menu meal DTOs with all meals simplified
      *
@@ -88,18 +105,36 @@ public class MenuEntityTransformer {
 
 
     /**
-     * Creates a full projection of a menu entity, with all recipes details.
+     * Creates a list of menu meal DTOs with all details
+     *
+     * @param menuMeals list of menu meals to transform to DTO
+     * @return returns a list of DTOs
+     */
+    private List<MenuMealDTO> createFullMenuMealDTO(List<MenuMeal> menuMeals) {
+        return menuMeals.stream().map(menuRecipe -> {
+            var menuMealDTO = new MenuMealDTO();
+            menuMealDTO.setDay(menuRecipe.getDay());
+            menuMealDTO.setMeal(mealEntityTransformer.createFullMealDTO(menuRecipe.getMeal()));
+            return menuMealDTO;
+        }).collect(Collectors.toList());
+    }
+
+
+    /**
+     * Creates a full projection of a menu entity, with all recipes and meal details.
      *
      * @param menu the menu to transform
      * @return returns the full projection
      */
-//    public FullMealDTO createFullMealDTO(Meal menu) {
-//        FullMealDTO menuSimpleDTO = new FullMealDTO();
-//        setBaseDtoValues(mealSimpleDetailsDTO, menu);
-//        List<FullRecipeDTO> recipes = menu.getRecipes().stream()
-//                .map(recipeEntityTransformer::createFullRecipeDTO).collect(Collectors.toList());
-//        mealSimpleDetailsDTO.setRecipes(recipes);
-//        return mealSimpleDetailsDTO;
-//    }
+    public MenuDTO createFullMenuDTO(Menu menu) {
+        if(menu == null) return null;
+        MenuDTO menuFullDTO = new MenuDTO();
+        setBaseDtoValues(menuFullDTO, menu);
+        List<MenuRecipeDTO> recipes = createFullMenuRecipeDTO(menu.getRecipes());
+        List<MenuMealDTO>   meals   = createFullMenuMealDTO(menu.getMeals());
+        menuFullDTO.setRecipes(recipes);
+        menuFullDTO.setMeals(meals);
+        return menuFullDTO;
+    }
 
 }

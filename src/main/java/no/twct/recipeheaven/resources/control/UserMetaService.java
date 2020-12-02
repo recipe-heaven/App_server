@@ -1,7 +1,9 @@
 package no.twct.recipeheaven.resources.control;
 
 import no.twct.recipeheaven.lib.CreatableBase;
+import no.twct.recipeheaven.menu.control.MenuEntityTransformer;
 import no.twct.recipeheaven.menu.entity.Menu;
+import no.twct.recipeheaven.menu.entity.MenuDTO;
 import no.twct.recipeheaven.resources.entity.UserMetaInfo;
 import no.twct.recipeheaven.user.boundry.AuthenticationService;
 import no.twct.recipeheaven.user.entity.User;
@@ -23,9 +25,8 @@ public class UserMetaService {
     @PersistenceContext
     EntityManager entityManager;
 
-
-
-
+    @Inject
+    MenuEntityTransformer menuEntityTransformer;
 
     public boolean starUserItem(BigInteger id){
         CreatableBase creatableBase = entityManager.find(CreatableBase.class, id);
@@ -57,13 +58,14 @@ public class UserMetaService {
 
     /**
      * Returns the active menu for the current user if no active menu is set null is returned
-     * @return the users active menu null if no is found
+     * @return the users active menu null rnif no is found
      */
-    public Menu getUserCurrentMenu(){
+    public MenuDTO getUserCurrentMenu(){
 
         User user = authenticationService.getLoggedInUser();
         UserMetaInfo userMetaInfo = UserMetaInfo.getByUserId(entityManager, user.getId());
-        return userMetaInfo.getCurrentMenu();
+        return menuEntityTransformer.createFullMenuDTO(userMetaInfo.getCurrentMenu());
+
     }
 
     public boolean setUserCurrentMenu(BigInteger id){
