@@ -7,7 +7,7 @@ x-DbLoggin:
     USER_USERNAME: '${POSTGRES_USER_USERNAME}'
     USER_DB_NAME: '${POSTGRES_USER_DB}'
     USER_PASSWORD: '${POSTGRES_USER_PASSWORD}'
-    POSTGRES_IP:  '${POSTGRES_IP}'
+    POSTGRES_IP: '${POSTGRES_IP}'
     SQLURL: 'jdbc:postgresql://${POSTGRES_IP}:5432/${POSTGRES_USER_DB}'
   networks: &postgres-ip
     ipv4_address: '${POSTGRES_IP}'
@@ -79,44 +79,34 @@ services:
     restart: unless-stopped
 
   # https://github.com/mikael2/payara-postgres-nginx/
-#  nginx:
-#    container_name: nginx
-#
-#    build:
-#      context: ./docker_files/nginx_certbot
-#      dockerfile: Dockerfile
-#
-#    volumes:
-#      - type: volume
-#        source: nginx_data
-#        target: /etc/letsencrypt
-#      - type: bind
-#        source: /web/frontend
-#        target: /www/fractal/
-#
-#    env_file:
-#      - ./config_files/nginx_cerbot.env
-#
-#    environment:
-#      DOMAIN: '${API_DOMAIN}'
-#      LE_EMAIL: '${MAIL_USERNAME}'
-#    logging:
-#      options:
-#        max-size: '50m'
-#        max-file: '3'
-#
-#    ports:
-#      - '80:80'
-#      - '443:443'
-#
-#    networks:
-#      frontend:
-#      local_network:
-#
-#    depends_on:
-#      - web_server
-#
-#    restart: unless-stopped
+  nginx:
+    container_name: nginx
+    build:
+      context: ./docker_files/nginx_certbot
+      dockerfile: Dockerfile
+    volumes:
+      - type: volume
+        source: nginx_data
+        target: /etc/letsencrypt
+    env_file:
+      - ./config_files/nginx_cerbot.env
+    environment:
+      DOMAIN: '${API_DOMAIN}'
+      LE_EMAIL: '${MAIL_USERNAME}'
+    logging:
+      options:
+        max-size: '50m'
+        max-file: '3'
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      frontend:
+      local_network:
+    depends_on:
+      - web_server
+
+    restart: unless-stopped
 
 networks:
   local_network:
