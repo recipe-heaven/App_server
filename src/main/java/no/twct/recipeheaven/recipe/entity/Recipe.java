@@ -27,12 +27,14 @@ public class Recipe extends ValidMenuItem {
 
 
     @NotEmpty
+    @Column(columnDefinition = "TEXT")
     String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     List<@Valid RecipeTag> tags;
 
     @NotEmpty
+    @Column(columnDefinition = "TEXT")
     String description;
 
     @Column(name = "cook_time")
@@ -51,10 +53,10 @@ public class Recipe extends ValidMenuItem {
     List<RecipeIngredient> recipeIngredients;
 
     @NotEmpty
-    @Column(name = "cooking_steps")
+    @Column(name = "cooking_steps", columnDefinition = "TEXT")
     String cookingSteps;
 
-    @Column(name = "recommended_drinks")
+    @Column(name = "recommended_drinks", columnDefinition = "TEXT")
     String recommendedDrinks;
 
 
